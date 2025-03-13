@@ -15,18 +15,59 @@ import {
   Box,
   Button,
   Center,
+  Input,
+  VStack,
   Container,
   Flex,
   Heading,
-  Input,
   Stack,
   Text,
   Link,
+  Textarea,
+ 
 } from '@chakra-ui/react';
+
+
+import { Select } from '@chakra-ui/select';
+
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText,
+} from '@chakra-ui/form-control'
+
+
+
+
+//Import React Hook Form and Zod for form validation
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+
+
 // Import Google icon
 import { FcGoogle } from 'react-icons/fc';
 // Import password show/hide icons
 import { FiEye, FiEyeOff } from 'react-icons/fi';
+
+
+// 1. Definite the schema for the form using Zod
+
+type SignupFormData = z.infer<typeof signupSchema>;
+const signupSchema = z.object({
+  userName: z.string().min(2, "Username must be at least 2 characters").nonempty('Username is required'),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  language: z.string().min(1, "Please select a language"),
+  mobile: z.string().regex(/^\d{10,}$/, "Invalid mobile number"),
+  description: z.string().max(300, "Description too long"),
+});
+
+
+
+
 
 /**
  * Registration Page Component
@@ -37,6 +78,17 @@ export default function SignUpPage() {
   // Password visibility state
   const [showPassword, setShowPassword] = useState(false);
   
+ // Use react-hook-form for form handling and validation
+const {
+  register,
+  handleSubmit,
+  formState: { errors, isSubmitting },
+} = useForm <SignupFormData>({
+  resolver: zodResolver(signupSchema),
+});
+
+
+
   // Password visibility toggle
   const handleClickShowPassword = () => {
     setShowPassword(prevState => !prevState);
@@ -46,7 +98,22 @@ export default function SignUpPage() {
   const handleSendCode = () => {
     console.log('Sending verification code');
     // In actual implementation, should call API to send verification code
+  
   };
+
+  // add onSubmit function
+const onSubmit = async (data:  SignupFormData) => {
+  try {
+    console.log("Form Data:", data);
+    // here can call API handling registration request
+  } catch (error) {
+    console.error('Registration error:', error);
+  }
+  
+};
+
+
+
 
   return (
     <Box w="100%" p={0} maxW="100%" bg="white">
@@ -96,24 +163,46 @@ export default function SignUpPage() {
             <Box flex={1} h="1px" bg="gray.200" />
           </Flex>
 
+
+          
           {/* Registration form */}
-          <Stack w="full" gap={4}>
-            {/* Email */}
-            <Box>
-              <Text mb={2} color="gray.800">Email</Text>
-              <Input 
-                placeholder="Email Adress" 
-                size="lg" 
+          <Stack w="full" gap={4} as="form" onSubmit={handleSubmit(onSubmit)}>
+            
+            
+        
+          {/* Username Field */}
+          <FormControl isInvalid={!!errors.userName}>
+              <FormLabel>Username</FormLabel>
+              <Input
+                placeholder="Enter your username"
+                size="lg"
                 borderRadius="full"
                 pl={6}
-                color="gray.800"
-                _placeholder={{ color: "gray.400" }}
+                _placeholder={{ color:"gray.400",opacity:1}}
+                {...register('userName')}
               />
-            </Box>
+              <FormErrorMessage>{errors.userName?.message}</FormErrorMessage>
+            </FormControl>
+
+
+            {/* Email Field */}
+            <FormControl isInvalid={!!errors.email}>
+              <FormLabel>Email Address*</FormLabel>
+              <Input
+                type="email"
+                placeholder="example@domain.com"
+                size="lg"
+                borderRadius="full"
+                pl={6}
+                _placeholder={{ color:"gray.400",opacity:1}}
+                {...register('email')}
+              />
+              <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
+            </FormControl>
 
             {/* Password */}
             <Box>
-              <Text mb={2} color="gray.800">Password</Text>
+              <Text mb={2} color="gray.800">Password*</Text>
               <Flex position="relative">
                 <Input 
                   type={showPassword ? "text" : "password"} 
@@ -152,6 +241,63 @@ export default function SignUpPage() {
               </Flex>
             </Box>
 
+            {/* Language */}
+            <FormControl isInvalid={!!errors.language} isRequired>
+                <FormLabel>
+                  Preferred Language
+                </FormLabel>
+            <Select
+              placeholder="Select language"
+              size="lg"
+              borderRadius="full"
+              pl={6}
+              focusBorderColor="blue.500"
+              errorBorderColor="red.500"
+              _placeholder={{ 
+                color: "gray.400",
+                fontSize: "md",
+                opacity: 1 
+              }}
+              //avoid CSS global pollution by using the css prop
+              css={{
+                "&::-ms-expand": { display: "none" },
+                "-webkit-appearance": "none",
+                "-moz-appearance": "none",
+                appearance: "none"
+              }}
+
+              {...register('language')}
+            >
+              <option value="en" style={{ padding: '8px' }}>English</option>
+              <option value="es">Spanish</option>
+              <option value="fr">French</option>
+              <option value="zh">Chinese</option>
+            </Select>
+            {errors.language && (
+              <FormErrorMessage mt={2} fontSize="sm">
+                {errors.language.message}
+              </FormErrorMessage>
+            )}
+          </FormControl>
+
+
+
+            {/* Mobile Number */}
+            <FormControl isInvalid={!!errors.mobile}>
+              <FormLabel>Mobile Number</FormLabel>
+              <Input
+                placeholder="Enter your mobile number"
+                size="lg"
+                borderRadius="full"
+                pl={6}
+                _placeholder={{ color:"gray.400",opacity:1}}
+                {...register('mobile')}
+              />
+              <FormErrorMessage>{errors.mobile?.message}</FormErrorMessage>
+            </FormControl>
+
+
+
             {/* Verification code */}
             <Box>
               <Text mb={2} color="gray.800">Email verification code</Text>
@@ -182,6 +328,22 @@ export default function SignUpPage() {
               </Flex>
             </Box>
 
+
+          {/* Description Field */}
+          <FormControl isInvalid={!!errors.description}>
+              <FormLabel>Self Description</FormLabel>
+              <Textarea
+                placeholder="Tell us about yourself"
+                size="lg"
+                borderRadius="lg"
+                resize="vertical"
+
+                {...register('description')}
+              />
+              <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
+            </FormControl>
+
+
             {/* Create account button */}
             <Button 
               mt={6}
@@ -202,6 +364,11 @@ export default function SignUpPage() {
               Sign In
             </Link>
           </Flex>
+
+          <Button type="submit" colorScheme="blue" isLoading={isSubmitting} width="full">
+              Register
+          </Button>
+          
         </Stack>
       </Box>
     </Box>

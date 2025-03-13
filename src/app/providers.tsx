@@ -9,9 +9,12 @@
 'use client'
 
 import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react'
+
 import React from 'react'
 
-// Create custom system
+
+
+//Create custom system
 const system = createSystem(defaultConfig)
 
 /**
@@ -21,6 +24,7 @@ const system = createSystem(defaultConfig)
  * @param children - Child components
  * @returns Component containing Chakra provider
  */
+
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ChakraProvider value={system}>
@@ -28,3 +32,5 @@ export function Providers({ children }: { children: React.ReactNode }) {
     </ChakraProvider>
   )
 } 
+
+
