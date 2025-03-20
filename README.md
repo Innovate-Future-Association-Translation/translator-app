@@ -17,25 +17,16 @@ First, install dependencies and run the development server:
 ```bash
 # Install dependencies
 npm install
-# or
-yarn install
-# or
-pnpm install
-# or
-bun install
 
 # Start the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
 ```
-Open [http://localhost:3000/home](http://localhost:3000/home) in your browser to view the application.
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
 ## Environment Setup
+
 Before running the application, ensure you have the following environment configured:
 
 Create a `.env.local` file in the project root (do not commit this file to version control) and add the following variable:
@@ -43,8 +34,8 @@ Create a `.env.local` file in the project root (do not commit this file to versi
 ```env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v1
 ```
-This variable replaces hardcoded API URLs with a dynamic value, allowing seamless switching between development and production environments.
 
+This variable replaces hardcoded API URLs with a dynamic value, allowing seamless switching between development and production environments.
 
 ## Technology Stack
 
@@ -56,12 +47,14 @@ This variable replaces hardcoded API URLs with a dynamic value, allowing seamles
 
 ## Project Structure
 
-- `/src/app` - Main application code
-  - `/components` - Reusable components
-  - `/styles` - Style files
-  - `/utils` - Utility functions
-  - `/api` - API route handlers
-  - `/hooks` - Custom React hooks
+- `/src/app` - Page-level routing, used to routes in the app
+  - `src/app/page-name` - Used for page routing
+  - `src/app/module` - components used in page
+  - `src/app/validation` - Form validation logic (e.g., schemas, validators)
+  - `src/app/lib/api` - API route handlers
+  - `src/app/context` - Context providers for global state
+  - `public` - Used to store the project image and logo
+  - `.env` -used to store project environment variable, project team member required to copy from notion and create .env file in project root folder and paste the environment variable to .env file before npm run dev
 
 ## Deployment
 
