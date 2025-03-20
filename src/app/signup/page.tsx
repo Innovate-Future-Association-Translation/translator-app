@@ -48,6 +48,7 @@ export default function SignUpPage() {
   };
 
   return (
+
     <Box w="100%" p={0} maxW="100%" bg="white">
       {/* Top navigation bar */}
       <Flex p={4} justify="space-between" align="center">
@@ -115,7 +116,7 @@ export default function SignUpPage() {
               <Text mb={2} color="gray.800">Password</Text>
               <Flex position="relative">
                 <Input 
-                  type={showPassword ? "text" : "password"} 
+                //  type={showPassword ? "text" : "password"} 
                   placeholder="Password" 
                   size="lg"
                   borderRadius="full"
@@ -143,7 +144,7 @@ export default function SignUpPage() {
                     display="flex" 
                     alignItems="center" 
                     justifyContent="center"
-                    key={showPassword ? "eye-off" : "eye"}
+                 key={showPassword ? "eye-off" : "eye"}
                   >
                     {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
                   </Box>
@@ -171,7 +172,7 @@ export default function SignUpPage() {
                   transform="translateY(-50%)"
                   h="1.75rem" 
                   size="sm" 
-                  onClick={handleSendCode}
+                 onClick={handleSendCode}
                   color="gray.600"
                   bg="transparent"
                   _hover={{ bg: "gray.100" }}
