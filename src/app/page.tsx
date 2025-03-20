@@ -7,7 +7,7 @@
  * which is the entry point for the IFA Translator application.
  */
 
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
 
 /**
  * Root Path Page Component
@@ -15,7 +15,7 @@ import { redirect } from "next/navigation";
  * @returns null - This return value will never be rendered due to the redirect
  */
 export default function RootPage() {
-  redirect("/signup");
+  redirect('/landing-page');
 
   // This return value will never be rendered because of the redirect
   return null;
