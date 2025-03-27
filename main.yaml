@@ -2,7 +2,8 @@ name: Terraform Deployment
 
 on:
   push:
-    branches: [ "devops-ben" ]
+    branches: 
+      - devops-ben
 
 
 permissions:
