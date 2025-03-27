@@ -78,4 +78,4 @@ Resolve [ticket-number]
 
 ## Development Team
 
-JR 24 IFA
+JR 24 IFA 。
