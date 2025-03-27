@@ -3,7 +3,7 @@ name: Terraform Deployment
 on:
   push:
     branches: 
-      - devops-ben
+      -  workflow_dispatch:
 
 
 permissions:
