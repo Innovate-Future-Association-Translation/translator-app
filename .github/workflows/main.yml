@@ -2,9 +2,9 @@ name: Terraform Deployment
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "devops-ben" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "devops-ben" ]
 
 permissions:
   contents: read
