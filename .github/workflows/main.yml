@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - devops-ben
-      - workflow_dispatch
+      - test/-devops-CICD-dev-branch-test
 
 jobs:
   build-and-push:
