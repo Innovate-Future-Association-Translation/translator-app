@@ -1,8 +1,11 @@
 name: Build and Push Docker Image to ECR
 
 on:
+  push:
     branches:
       - dev
+      - devops-ben
+      - workflow_dispatch
 
 jobs:
   build-and-push:
@@ -11,4 +14,3 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
