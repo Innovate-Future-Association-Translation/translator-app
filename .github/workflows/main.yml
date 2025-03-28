@@ -1,68 +1,14 @@
-name: Terraform Deployment
+name: test
 
 on:
   push:
-    branches: [ "devops-ben" ]
-  pull_request:
-    branches: [ "devops-ben" ]
-
-permissions:
-  contents: read
-  id-token: write  # 用于OIDC身份验证（推荐方式）
-
-env:
-  AWS_REGION: ap-southeast-2
-  TF_VERSION: 1.8.0
-
+    branches:
+      - dev
+      
 jobs:
-  terraform:
-    name: Terraform
+  build-and-push:
     runs-on: ubuntu-latest
-    environment: production
-
-    defaults:
-      run:
-        working-directory: ./  # 根据实际目录结构调整
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-
-    # 推荐使用OIDC进行AWS认证（比长期凭证更安全）
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
-        aws-region: ${{ env.AWS_REGION }}
-
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: ${{ env.TF_VERSION }}
-
-    - name: Terraform Format
-      run: terraform fmt -check
-
-    - name: Terraform Init
-      run: terraform init
-
-    - name: Terraform Validate
-      run: terraform validate
-
-    # PR时执行Plan并生成注释
-    - name: Terraform Plan
-      if: github.event_name == 'pull_request'
-      run: terraform plan -input=false
-      continue-on-error: false
-
-    # Main分支推送时执行Apply
-    - name: Terraform Apply
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform apply -auto-approve -input=false
-
-    # 输出应用URL到Job Summary
-    - name: Generate Output
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: |
-        echo "Application URL: $(terraform output -raw application_url)" >> $GITHUB_STEP_SUMMARY
-        echo "Public IP: $(terraform output -raw public_ip)" >> $GITHUB_STEP_SUMMARY
+      - name: Checkout code
+        uses: actions/checkout@v3
