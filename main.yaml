@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - dev
-      - devops-ben
 
 jobs:
   build-and-push:
