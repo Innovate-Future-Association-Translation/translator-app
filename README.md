@@ -68,6 +68,7 @@ PRs and Issues are welcome to improve this project. Please follow these standard
 
 1. PR title format: `[prefix]: [task name]`
 2. Commit message format:
+
 ```
 [prefix]: [task name]
 
