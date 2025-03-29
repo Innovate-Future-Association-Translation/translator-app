@@ -1,9 +1,8 @@
-name: test
+name: Build and Push
 
 on:
   push:
     branches:
-      - devops-ben
       - test/-devops-CICD-dev-branch-test
 
 jobs:
@@ -13,3 +12,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.0
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: 
+          terraform init
+          terraform apply -auto-approve
