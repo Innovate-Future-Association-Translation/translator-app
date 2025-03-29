@@ -29,5 +29,6 @@ jobs:
          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: 
-          terraform init
-          terraform apply -auto-approve
+         terraform -chdir=./terraform init
+         terraform -chdir=./terraform apply -auto-approve
+  
