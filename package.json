@@ -6,7 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,scss,md,json}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@chakra-ui/react": "^3.1.0",
@@ -14,6 +24,7 @@
     "@emotion/styled": "^11.14.0",
     "framer-motion": "^12.4.7",
     "next": "15.2.0",
+    "prettier": "^3.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0"
@@ -23,8 +34,12 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
+    "@typescript-eslint/eslint-plugin": "^8.29.1",
+    "@typescript-eslint/parser": "^8.29.1",
+    "eslint": "^9.24.0",
     "eslint-config-next": "15.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
     "typescript": "^5"
   }
 }
