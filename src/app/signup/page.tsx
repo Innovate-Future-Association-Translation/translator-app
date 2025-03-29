@@ -1,16 +1,10 @@
-/**
- * src/app/signup/page.tsx
- * User Registration Page
- * 
- * This page provides user registration functionality, including:
- * - Quick registration with Google account
- * - Email and password registration
- * - Email verification functionality
- */
+"use client";
 
-'use client';
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { Suspense } from "react";
 import {
   Box,
   Button,
@@ -21,30 +15,48 @@ import {
   Stack,
   Text,
   Link,
-} from '@chakra-ui/react';
-// Import Google icon
-import { FcGoogle } from 'react-icons/fc';
-// Import password show/hide icons
-import { FiEye, FiEyeOff } from 'react-icons/fi';
+} from "@chakra-ui/react";
 
-/**
- * Registration Page Component
- * Provides a user interface with multiple registration methods
- * @returns JSX Element - Renders the registration page
- */
 export default function SignUpPage() {
-  // Password visibility state
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignUpContent />
+    </Suspense>
+  );
+}
+
+function SignUpContent() {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const authError = searchParams?.get("authError") === "true";
   const [showPassword, setShowPassword] = useState(false);
-  
-  // Password visibility toggle
+  const [pageFromAuth, setPageFromAuth] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (authError) {
+      setPageFromAuth(true);
+    }
+  }, [authError]);
+
+  useEffect(() => {
+    if (pageFromAuth) {
+      const newSearchParams = new URLSearchParams(searchParams.toString());
+      newSearchParams.delete("authError");
+      router.replace(`${pathname}?${newSearchParams.toString()}`);
+    }
+  }, [pageFromAuth, router]);
+
   const handleClickShowPassword = () => {
-    setShowPassword(prevState => !prevState);
+    setShowPassword((prevState) => !prevState);
   };
-  
-  // Send verification code handler
+
   const handleSendCode = () => {
-    console.log('Sending verification code');
-    // In actual implementation, should call API to send verification code
+    console.log("Sending verification code");
+  };
+
+  const handleGoogleOauth = () => {
+    window.location.href = "http://localhost:8000/api/v1/users/googleAuth";
   };
 
   return (
@@ -53,21 +65,26 @@ export default function SignUpPage() {
       <Flex p={4} justify="space-between" align="center">
         <Flex align="center">
           <Center bg="blue.500" borderRadius="full" p={2} mr={2} boxSize="40px">
-            <Text fontSize="xl" color="white" fontWeight="bold">f</Text>
+            <Text fontSize="xl" color="white" fontWeight="bold">
+              f
+            </Text>
           </Center>
-          <Text fontSize="xl" fontWeight="bold" color="blue.500">IFA TRANSLATOR</Text>
+          <Text fontSize="xl" fontWeight="bold" color="blue.500">
+            IFA TRANSLATOR
+          </Text>
         </Flex>
         <Box as="button">
           <Text fontSize="2xl">☰</Text>
         </Box>
       </Flex>
 
-      {/* Main content */}
       <Box maxW="md" py={8} mx="auto" bg="white">
         <Stack align="center" gap={8}>
           {/* Title */}
           <Stack textAlign="center" gap={2}>
-            <Heading size="4xl" color="black">Sign Up</Heading>
+            <Heading size="4xl" color="black">
+              Sign Up
+            </Heading>
             <Text color="gray.500">Welcome to IFA Translator!</Text>
           </Stack>
 
@@ -81,8 +98,16 @@ export default function SignUpPage() {
             justifyContent="center"
             alignItems="center"
             gap={2}
+            onClick={handleGoogleOauth}
           >
-            <Box as="span" w="20px" h="20px" display="flex" alignItems="center" justifyContent="center">
+            <Box
+              as="span"
+              w="20px"
+              h="20px"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
               <FcGoogle size={20} />
             </Box>
             <Text>Sign up with Google</Text>
@@ -99,10 +124,12 @@ export default function SignUpPage() {
           <Stack w="full" gap={4}>
             {/* Email */}
             <Box>
-              <Text mb={2} color="gray.800">Email</Text>
-              <Input 
-                placeholder="Email Adress" 
-                size="lg" 
+              <Text mb={2} color="gray.800">
+                Email
+              </Text>
+              <Input
+                placeholder="Email Address"
+                size="lg"
                 borderRadius="full"
                 pl={6}
                 color="gray.800"
@@ -112,11 +139,13 @@ export default function SignUpPage() {
 
             {/* Password */}
             <Box>
-              <Text mb={2} color="gray.800">Password</Text>
+              <Text mb={2} color="gray.800">
+                Password
+              </Text>
               <Flex position="relative">
-                <Input 
-                  type={showPassword ? "text" : "password"} 
-                  placeholder="Password" 
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
                   size="lg"
                   borderRadius="full"
                   w="full"
@@ -138,14 +167,18 @@ export default function SignUpPage() {
                   fontSize="md"
                   color="gray.500"
                 >
-                  <Box 
-                    as="span" 
-                    display="flex" 
-                    alignItems="center" 
+                  <Box
+                    as="span"
+                    display="flex"
+                    alignItems="center"
                     justifyContent="center"
                     key={showPassword ? "eye-off" : "eye"}
                   >
-                    {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                    {showPassword ? (
+                      <FiEyeOff size={16} />
+                    ) : (
+                      <FiEye size={16} />
+                    )}
                   </Box>
                 </Button>
               </Flex>
@@ -153,10 +186,12 @@ export default function SignUpPage() {
 
             {/* Verification code */}
             <Box>
-              <Text mb={2} color="gray.800">Email verification code</Text>
+              <Text mb={2} color="gray.800">
+                Email verification code
+              </Text>
               <Flex position="relative">
-                <Input 
-                  placeholder="Email verification code" 
+                <Input
+                  placeholder="Email verification code"
                   size="lg"
                   borderRadius="full"
                   w="full"
@@ -164,13 +199,13 @@ export default function SignUpPage() {
                   color="gray.800"
                   _placeholder={{ color: "gray.400" }}
                 />
-                <Button 
-                  position="absolute" 
-                  right="8px" 
-                  top="50%" 
+                <Button
+                  position="absolute"
+                  right="8px"
+                  top="50%"
                   transform="translateY(-50%)"
-                  h="1.75rem" 
-                  size="sm" 
+                  h="1.75rem"
+                  size="sm"
                   onClick={handleSendCode}
                   color="gray.600"
                   bg="transparent"
@@ -182,12 +217,12 @@ export default function SignUpPage() {
             </Box>
 
             {/* Create account button */}
-            <Button 
+            <Button
               mt={6}
-              size="lg" 
-              bg="gray.400" 
-              color="white" 
-              _hover={{ bg: 'gray.500' }}
+              size="lg"
+              bg="gray.400"
+              color="white"
+              _hover={{ bg: "gray.500" }}
               borderRadius="full"
             >
               Create Account
@@ -196,7 +231,9 @@ export default function SignUpPage() {
 
           {/* Login link */}
           <Flex pt={6}>
-            <Text color="gray.500" mr={1}>Already have an account?</Text>
+            <Text color="gray.500" mr={1}>
+              Already have an account?
+            </Text>
             <Link color="blue.500" href="/signin" fontWeight="semibold">
               Sign In
             </Link>
@@ -205,4 +242,4 @@ export default function SignUpPage() {
       </Box>
     </Box>
   );
-} 
+}

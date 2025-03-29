@@ -7,6 +7,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "./providers";
+import { ErrorProvider } from "@/context/errorContext";
 import "./globals.css";
 
 // Define Geist Sans font
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
 /**
  * Root Layout Component
  * Contains global styles, fonts and providers
- * 
+ *
  * @param children - Child components
  * @returns Root layout component
  */
@@ -43,7 +44,7 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
         <Providers>
-          {children}
+          <ErrorProvider>{children}</ErrorProvider>
         </Providers>
       </body>
     </html>

@@ -11,4 +11,4 @@ const nextConfig = {
   transpilePackages: ["@chakra-ui/react"],
 };
 
-export default nextConfig; 
+export default nextConfig;

@@ -41,7 +41,10 @@ a {
 }
 
 /* Responsive handling for images */
-img, video, canvas, svg {
+img,
+video,
+canvas,
+svg {
   display: block;
   max-width: 100%;
 }
