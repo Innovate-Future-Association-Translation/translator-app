@@ -36,12 +36,12 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 export default function SignUpPage() {
   // Password visibility state
   const [showPassword, setShowPassword] = useState(false);
-  
+
   // Password visibility toggle
   const handleClickShowPassword = () => {
     setShowPassword(prevState => !prevState);
   };
-  
+
   // Send verification code handler
   const handleSendCode = () => {
     console.log('Sending verification code');
@@ -101,9 +101,9 @@ export default function SignUpPage() {
             {/* Email */}
             <Box>
               <Text mb={2} color="gray.800">Email</Text>
-              <Input 
-                placeholder="Email Adress" 
-                size="lg" 
+              <Input
+                placeholder="Email Adress"
+                size="lg"
                 borderRadius="full"
                 pl={6}
                 color="gray.800"
@@ -115,9 +115,9 @@ export default function SignUpPage() {
             <Box>
               <Text mb={2} color="gray.800">Password</Text>
               <Flex position="relative">
-                <Input 
-                  type={showPassword ? "text" : "password"} 
-                  placeholder="Password" 
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
                   size="lg"
                   borderRadius="full"
                   w="full"
@@ -139,10 +139,10 @@ export default function SignUpPage() {
                   fontSize="md"
                   color="gray.500"
                 >
-                  <Box 
-                    as="span" 
-                    display="flex" 
-                    alignItems="center" 
+                  <Box
+                    as="span"
+                    display="flex"
+                    alignItems="center"
                     justifyContent="center"
                     key={showPassword ? "eye-off" : "eye"}
                   >
@@ -156,8 +156,8 @@ export default function SignUpPage() {
             <Box>
               <Text mb={2} color="gray.800">Email verification code</Text>
               <Flex position="relative">
-                <Input 
-                  placeholder="Email verification code" 
+                <Input
+                  placeholder="Email verification code"
                   size="lg"
                   borderRadius="full"
                   w="full"
@@ -165,13 +165,13 @@ export default function SignUpPage() {
                   color="gray.800"
                   _placeholder={{ color: "gray.400" }}
                 />
-                <Button 
-                  position="absolute" 
-                  right="8px" 
-                  top="50%" 
+                <Button
+                  position="absolute"
+                  right="8px"
+                  top="50%"
                   transform="translateY(-50%)"
-                  h="1.75rem" 
-                  size="sm" 
+                  h="1.75rem"
+                  size="sm"
                   onClick={handleSendCode}
                   color="gray.600"
                   bg="transparent"
@@ -183,11 +183,11 @@ export default function SignUpPage() {
             </Box>
 
             {/* Create account button */}
-            <Button 
+            <Button
               mt={6}
-              size="lg" 
-              bg="gray.400" 
-              color="white" 
+              size="lg"
+              bg="gray.400"
+              color="white"
               _hover={{ bg: 'gray.500' }}
               borderRadius="full"
             >
