@@ -41,10 +41,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>
-        <Providers>
-          {children}
-        </Providers>
+      {/* add suppressHydrationWarning to prevent hydration mismatch error */}
+      <body suppressHydrationWarning style={{ backgroundColor: "white" }}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -10,7 +10,6 @@
 
 import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react'
 import React from 'react'
-
 // Create custom system
 const system = createSystem(defaultConfig)
 
