@@ -6,50 +6,34 @@ pipeline {
     }
 
     tools {
-        nodejs 'NodeJS_20' // 请确保已在 Jenkins 全局工具配置里定义
+        nodejs 'NodeJS_20' // 请确保在 Jenkins Global Tool 配置中存在此版本
     }
 
     stages {
         stage('Install Dependencies') {
             steps {
                 echo '📦 Installing dependencies...'
-                sh '''
-                    npm install
-                    npm install --save-dev typescript @types/react @types/node
-                '''
+                sh 'npm install'
             }
         }
 
-        stage('Build') {
+        stage('Build with Export') {
             steps {
-                echo '🏗️ Building Next.js project...'
-                sh '''
-                    npm run build
-                '''
+                echo '🔧 Building & Exporting static site...'
+                sh 'npm run build'
             }
         }
 
-        stage('Test') {
-            steps {
-                echo '🧪 Running tests...'
-                // 如果你没有 test 脚本，可留空或跳过
-                // sh 'echo "No tests defined."'
-            }
-        }
-
-        stage('Deploy') {
+        stage('Deploy to /var/www/html') {
             when {
                 branch 'main'
             }
             steps {
-                echo '🚀 Deploying to /var/www/html...'
+                echo '🚀 Deploying static site to /var/www/html...'
                 sh '''
                     sudo rm -rf /var/www/html/*
-                    sudo cp -r .next/static /var/www/html/
-                    sudo cp -r public/* /var/www/html/
-                    sudo cp -r out/* /var/www/html/ || true
-                    sudo cp -r build/* /var/www/html/ || true
-                    echo "✅ Deployment complete."
+                    sudo cp -r out/* /var/www/html/
+                    echo "✅ Static site deployed successfully."
                 '''
             }
         }
@@ -57,10 +41,10 @@ pipeline {
 
     post {
         success {
-            echo '🎉 Build & Deploy succeeded!'
+            echo '🎉 Build and Deploy succeeded!'
         }
         failure {
-            echo '❌ Build failed. Check logs above for details.'
+            echo '❌ Build or Deploy failed. Check logs for details.'
         }
     }
 }
