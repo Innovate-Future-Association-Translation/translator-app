@@ -6,49 +6,61 @@ pipeline {
     }
 
     tools {
-        nodejs 'NodeJS_20' // 你需要在 Jenkins 全局工具配置里定义这个 Node 版本
+        nodejs 'NodeJS_20' // 请确保已在 Jenkins 全局工具配置里定义
     }
 
     stages {
         stage('Install Dependencies') {
             steps {
-                echo 'Installing dependencies...'
-                sh 'npm install'  // 或 npm install，推荐 ci 用于 CI 环境
+                echo '📦 Installing dependencies...'
+                sh '''
+                    npm install
+                    npm install --save-dev typescript @types/react @types/node
+                '''
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Building Next.js project...'
-                sh 'npm run build'
+                echo '🏗️ Building Next.js project...'
+                sh '''
+                    npm run build
+                '''
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running tests...'
-                // 如果你有测试命令，比如 jest，可替换下面命令
-                // sh 'npm run test || echo "No tests defined."'
+                echo '🧪 Running tests...'
+                // 如果你没有 test 脚本，可留空或跳过
+                // sh 'echo "No tests defined."'
             }
         }
 
         stage('Deploy') {
             when {
-                branch 'main' // 只在 main 分支构建时部署
+                branch 'main'
             }
             steps {
-                echo 'Deploy step placeholder...'
-                // 这里可以换成部署到服务器的命令，比如 rsync / scp / docker run
+                echo '🚀 Deploying to /var/www/html...'
+                sh '''
+                    sudo rm -rf /var/www/html/*
+                    sudo cp -r .next/static /var/www/html/
+                    sudo cp -r public/* /var/www/html/
+                    sudo cp -r out/* /var/www/html/ || true
+                    sudo cp -r build/* /var/www/html/ || true
+                    echo "✅ Deployment complete."
+                '''
             }
         }
     }
 
     post {
         success {
-            echo 'Build succeeded!'
+            echo '🎉 Build & Deploy succeeded!'
         }
         failure {
-            echo 'Build failed.'
+            echo '❌ Build failed. Check logs above for details.'
         }
     }
 }
