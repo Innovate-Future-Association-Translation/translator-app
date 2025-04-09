@@ -11,7 +11,7 @@ import {
   Image,
   Box,
 } from "@chakra-ui/react";
-import Textbox from "../translationFeatures/textBox";
+import Textbox from "../textBox";
 
 import React from "react";
 import { wrap } from "module";

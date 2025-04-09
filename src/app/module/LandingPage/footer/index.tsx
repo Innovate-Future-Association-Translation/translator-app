@@ -3,7 +3,6 @@ import {
   Button,
   Card,
   Flex,
-  For,
   Stack,
   Text,
   HStack,
@@ -13,56 +12,79 @@ import {
 import FooterNav from "./footerNav";
 import Contact from "./contact";
 import React from "react";
-import Textbox from "../translationFeatures/textBox";
+import Textbox from "../textBox";
 
 function Footer() {
   return (
-    <Stack bg="#F7F8FA" alignItems="center" className="footer-container">
-      <Flex height="25vh" bg="#F7F8FA" className= "logo-nav-contact-container">
-        <Box className="bussinessLogo" flex="1">
-          <Heading
-            fontSize="2xl"
-            fontWeight="bold"
-            color="#066FFB"
-            pt={20}
-            pl="10vh"
-          >
+    <Stack
+      bg="#F7F8FA"
+      alignItems="center"
+      className="footer-container"
+      padding={{ base: "3vh 0", sm: "3vh 0", md: "3vh 0" }}
+    >
+      <Flex
+        direction={{ base: "column", md: "row" }} 
+        height={{ base: "auto", md: "25vh" }} 
+        width={{base: "auto" , md:"80vw"}}
+        bg="#F7F8FA"
+        className="logo-nav-contact-container"
+        justify="space-between" 
+        align="flex-start" 
+        wrap="wrap" 
+        gap={{ base: "4", md: "12" }} 
+      
+      >
+        {/* Logo Box */}
+        <Box
+          className="businessLogo"
+          flex={{ base: "none", md: "1" }} 
+          textAlign={{ base: "center", md: "left" }} 
+          mb={{ base: "4vh", md: "0" }} 
+          alignSelf={{ base: "center", md: "flex-start" }}
+        >
+          <Heading fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" color="#066FFB">
             IFA TRANSLATOR
           </Heading>
         </Box>
+
+        {/* Navigation Box */}
         <Box
           className="navBar"
-          fontSize="xl"
-          flex="1"
+          fontSize={{ base: "1", sm: "2" }} 
+          flex={{ base: "none", md: "2" }}
           bg="#F7F8FA"
           color="black"
-          pt={20}
-          pl="10vh"
+          textAlign={{ base: "center", md: "left" }} 
+          mb={{ base: "4vh", md: "0" }} 
+          alignSelf={{ base: "center", md: "flex-start" }}  
         >
-          <FooterNav></FooterNav>
+          <FooterNav />
         </Box>
+
+        {/* Contact Box */}
         <Box
           className="contact"
-          flex="1"
+          flex={{ base: "none", md: "1" }}
           bg="#F7F8FA"
-          pt={20}
-          pl={60}
-          pr="10vh"
+          textAlign={{ base: "center", md: "left" }} 
+          mb={{ base: "4vh", md: "0" }} 
+          alignSelf={{ base: "center", md: "flex-start" }}  
         >
-          <Contact></Contact>
+          <Contact />
         </Box>
       </Flex>
+
+
       <Textbox
         headerText="Privacy Protected  |  Legal Disclaimer"
         bg="none"
         headerSize="md"
         text="© 2025 IFA Translator. All rights reserved."
-        box_w="25vw"
+        box_w={{ base: "90vw", sm: "80vw", md: "25vw" }} 
         box_h="10vh"
-        textColor="black"
-         heaerColor="black"
-         fontSize="md"
-      ></Textbox>
+        textColor="grey"
+        fontSize={{ base: "sm", md: "md" }} 
+      />
     </Stack>
   );
 }

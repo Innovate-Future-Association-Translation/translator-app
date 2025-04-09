@@ -15,7 +15,7 @@ import { redirect } from 'next/navigation'
  * @returns null - This return value will never be rendered due to the redirect
  */
 export default function RootPage() {
-  redirect('/signup')
+  redirect('/landingPage')
   
   // This return value will never be rendered because of the redirect
   return null

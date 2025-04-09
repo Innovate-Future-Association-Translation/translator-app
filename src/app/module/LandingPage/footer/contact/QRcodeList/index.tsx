@@ -16,7 +16,7 @@ function QRcodeList({ QRCodeList }: QRcodeListProps) {
     <Flex w="100%" h="auto" justifyContent="space-evenly">
       {QRCodeList.map((qrCode) => (
         <Stack key={qrCode.code_id} flexDirection="column" w="10vw" h="10vw">
-          <Text color="gray.800" fontSize="small">
+          <Text color="gray.800" fontSize="12px">
             {qrCode.description}
           </Text>
           <Box

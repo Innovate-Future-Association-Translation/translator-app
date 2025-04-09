@@ -15,9 +15,9 @@ interface TextBoxInput {
   headerText: string;
   text: string;
   textColor?: string;
-  box_w: string;
-  box_h: string;
-  fontSize?: string;
+  box_w: string | object;
+  box_h: string | object;
+  fontSize?: string|object;
   fontWeight?: string;
   costomPadding?: string;
   headerSize?:
@@ -33,6 +33,7 @@ interface TextBoxInput {
     | "6xl"
     | "7xl";
   heaerColor?: string;
+  
 }
 
 export default function Textbox({

@@ -18,9 +18,9 @@ function SmallScreenDescription() {
         Multilingual Classroom Discussion
       </Text >
       <Flex flexDirection="column" alignItems="flex-start" mb={1}>
-      <Text mb={2}>✅ Real-time Speech Translation</Text>
-      <Text mb={2}>✅ Smart Speaker Recognition</Text>
-      <Text>✅ Seamless Language Switching</Text>
+      <Text mb={2} color="black">✅ Real-time Speech Translation</Text>
+      <Text mb={2} color="black">✅ Smart Speaker Recognition</Text>
+      <Text color="black">✅ Seamless Language Switching</Text>
     </Flex>
     </Flex>
   );

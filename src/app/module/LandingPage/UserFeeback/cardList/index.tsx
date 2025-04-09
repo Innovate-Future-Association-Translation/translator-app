@@ -26,23 +26,27 @@ interface UserListProps {
 
 function CardList({ users }: UserListProps) {
   return (
-    <Flex flexDirection="row" gap="2vw">
+    <Flex
+      flexDirection={{ base: "column", md: "row" }}
+      gap={{ base: "2vh", md: "2vw" }}
+    >
       {users.map((user) => (
         <Card.Root
           key={user.id}
-          width="25vw"
+          width={{ base: "80vw", sm: "75vw", md: "25vw" }}
           height="20vh"
           borderRadius="2xl"
           border="none"
+          gap={{ base: "2vh", sm: "2vh", md: "3vw" }}
         >
           <Card.Body
-            gap="4"
+            gap={{ base: "1", sm: "2", md: "4" }}
             bg="#F7F8FA"
             borderRadius="2xl"
             boxShadow="xl"
             border="none"
           >
-            <HStack mb="6" gap="2" padding={2}>
+            <HStack mb={{base:"2",  lg:"6"}} padding={2}>
               <Avatar.Root>
                 <Avatar.Image bg="#grey" />
               </Avatar.Root>
@@ -55,7 +59,15 @@ function CardList({ users }: UserListProps) {
                 </Text>
               </Stack>
             </HStack>
-            <Card.Description padding={4}>{user.text}</Card.Description>
+            <Card.Description
+              paddingLeft={{ base: "0", md: "30px" }}
+              paddingRight={{ base: "0", md: "30px" }}
+              paddingBottom={{ base: "0", md: "10px" }}
+              fontFamily="Helvetica"
+              fontSize={{base:"sm",md:"normal"}}
+            >
+              {user.text}
+            </Card.Description>
           </Card.Body>
         </Card.Root>
       ))}

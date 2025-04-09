@@ -9,7 +9,7 @@ import {
 
 function FooterNav() {
   return (
-    <Flex flex="1" justifyContent="space-between" gap ={4}>
+    <Flex flex="1" justifyContent="space-between" gap ={2}>
         <Link>Home</Link>
         <Link>Product Function</Link>
         <Link>Price Schema</Link>

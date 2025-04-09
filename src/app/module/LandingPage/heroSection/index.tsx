@@ -4,14 +4,8 @@ import AvatarWithSpeechBubble from "./speechBubble";
 import {
   Box,
   Flex,
-  Heading,
-  Container,
   Text,
-  Image,
-  Link,
-  VStack,
-  Badge,
-  Center,
+
 } from "@chakra-ui/react";
 
 function HeroSection() {

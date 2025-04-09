@@ -17,10 +17,10 @@ const QRcodeTable = [
 function Contact() {
   return (
     <Stack>
-      <Text color="black" fontSize="xl">
+      <Text color="black" fontSize={{ sm:"1" ,md:"1",lg:"1"}}>
         Contact Us
       </Text>
-      <Text color="grey" fontSize="sm">
+      <Text color="grey" fontSize = {{ sm:"xx-small" ,md:"smaller",lg:"small"}}>
         Join IFA Translator and experience smart translation. Scan the code to
         contact us for inquiries.
       </Text>
