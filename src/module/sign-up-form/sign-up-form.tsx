@@ -1,34 +1,25 @@
 'use client';
 
-import { Image } from '@chakra-ui/react';
-import React, { useState } from 'react';
 import {
-  Box,
-  Button,
-  Input,
-  Flex,
-  Heading,
-  VStack,
-  Text,
-  Link,
-  Textarea,
-  useBreakpointValue,
+    Box,
+    Button, Flex,
+    Heading, Image, Link, Text, useBreakpointValue
 } from '@chakra-ui/react';
+import { useState } from 'react';
 
-import { useForm } from "react-hook-form";
+import { SignupFormData, signupSchema } from '@/app/schemas/signupSchema';
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema, SignupFormData } from '@/app/schemas/signupSchema';
+import { useForm } from "react-hook-form";
 // Import Google icon
 import { FcGoogle } from 'react-icons/fc';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
 
-import { EmailField } from './email';
-import { PasswordField} from './password';
 import { ConfirmPasswordField } from './confirm-password';
-import { UsernameField } from './username';
-import { LanguageField } from './language';
-import { PhoneNumberField } from './phone-number';
 import { DescriptionField } from './description';
+import { EmailField } from './email';
+import { LanguageField } from './language';
+import { PasswordField } from './password';
+import { PhoneNumberField } from './phone-number';
+import { UsernameField } from './username';
 
 /**
  * Registration Page Component
@@ -59,6 +50,12 @@ const handleSendCode = () => {
 console.log('Sending verification code');
 // In actual implementation, should call API to send verification code
 };
+
+// 处理Google OAuth认证
+const handleGoogleOauth = () => {
+    window.location.href = "http://localhost:8000/api/v1/users/googleAuth";
+};
+
 // add onSubmit function
 const onSubmit = async (data:  SignupFormData) => {
 try {
@@ -68,7 +65,6 @@ console.log("Form Data:", data);
 console.error('Registration error:', error);
 }
 };
-
 
 return (
 <Box bg="white" minH="100vh" maxW="md" py={8} mx="auto" px={{ base: 4, md: 8 }} width="100%">
@@ -178,6 +174,7 @@ return (
         py={{ base: 5, md: 6 }}
         fontSize={{ base: "sm", md: "md" }}
         borderWidth="1.5px"
+        onClick={handleGoogleOauth}
     >
         <FcGoogle size={18} />
         {/* icon size is responsive */}

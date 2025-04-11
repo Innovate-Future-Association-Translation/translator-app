@@ -1,245 +1,38 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { FcGoogle } from "react-icons/fc";
-import { FiEye, FiEyeOff } from "react-icons/fi";
-import { Suspense } from "react";
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Heading,
-  Input,
-  Stack,
-  Text,
-  Link,
-} from "@chakra-ui/react";
+import { Box, Flex } from '@chakra-ui/react';
+import SignUpPage from '@/module/sign-up-form/sign-up-form';
+import React from "react";
 
-export default function SignUpPage() {
+export default function SignUpPageForm() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <SignUpContent />
-    </Suspense>
-  );
-}
-
-function SignUpContent() {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
-  const authError = searchParams?.get("authError") === "true";
-  const [showPassword, setShowPassword] = useState(false);
-  const [pageFromAuth, setPageFromAuth] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (authError) {
-      setPageFromAuth(true);
-    }
-  }, [authError]);
-
-  useEffect(() => {
-    if (pageFromAuth) {
-      const newSearchParams = new URLSearchParams(searchParams.toString());
-      newSearchParams.delete("authError");
-      router.replace(`${pathname}?${newSearchParams.toString()}`);
-    }
-  }, [pageFromAuth, router]);
-
-  const handleClickShowPassword = () => {
-    setShowPassword((prevState) => !prevState);
-  };
-
-  const handleSendCode = () => {
-    console.log("Sending verification code");
-  };
-
-  const handleGoogleOauth = () => {
-    window.location.href = "http://localhost:8000/api/v1/users/googleAuth";
-  };
-
-  return (
-    <Box w="100%" p={0} maxW="100%" bg="white">
-      {/* Top navigation bar */}
-      <Flex p={4} justify="space-between" align="center">
-        <Flex align="center">
-          <Center bg="blue.500" borderRadius="full" p={2} mr={2} boxSize="40px">
-            <Text fontSize="xl" color="white" fontWeight="bold">
-              f
-            </Text>
-          </Center>
-          <Text fontSize="xl" fontWeight="bold" color="blue.500">
-            IFA TRANSLATOR
-          </Text>
-        </Flex>
-        <Box as="button">
-          <Text fontSize="2xl">☰</Text>
+    <Box minH="100vh" bg="white">
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        maxW="1200px"
+        mx="auto"
+        w="full"
+        h="full"
+      >
+        <Box
+          flex="1"
+          p={{ base: 4, md: 8 }}
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+        >
+          <SignUpPage />
         </Box>
+
+        <Box
+          flex="1"
+          backgroundImage="url('/icons/dashboardUI-top.png')"
+          backgroundSize="contain"
+          backgroundPosition="top center"
+          backgroundRepeat="no-repeat"
+          display={{ base: 'none', md: 'block' }}
+        ></Box>
       </Flex>
-
-      <Box maxW="md" py={8} mx="auto" bg="white">
-        <Stack align="center" gap={8}>
-          {/* Title */}
-          <Stack textAlign="center" gap={2}>
-            <Heading size="4xl" color="black">
-              Sign Up
-            </Heading>
-            <Text color="gray.500">Welcome to IFA Translator!</Text>
-          </Stack>
-
-          {/* Google login button */}
-          <Button
-            w="full"
-            variant="outline"
-            borderRadius="full"
-            size="lg"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            gap={2}
-            onClick={handleGoogleOauth}
-          >
-            <Box
-              as="span"
-              w="20px"
-              h="20px"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <FcGoogle size={20} />
-            </Box>
-            <Text>Sign up with Google</Text>
-          </Button>
-
-          {/* Divider */}
-          <Flex w="full" align="center" gap={3}>
-            <Box flex={1} h="1px" bg="gray.200" />
-            <Text color="gray.500">OR</Text>
-            <Box flex={1} h="1px" bg="gray.200" />
-          </Flex>
-
-          {/* Registration form */}
-          <Stack w="full" gap={4}>
-            {/* Email */}
-            <Box>
-              <Text mb={2} color="gray.800">
-                Email
-              </Text>
-              <Input
-                placeholder="Email Address"
-                size="lg"
-                borderRadius="full"
-                pl={6}
-                color="gray.800"
-                _placeholder={{ color: "gray.400" }}
-              />
-            </Box>
-
-            {/* Password */}
-            <Box>
-              <Text mb={2} color="gray.800">
-                Password
-              </Text>
-              <Flex position="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password"
-                  size="lg"
-                  borderRadius="full"
-                  w="full"
-                  pl={6}
-                  color="gray.800"
-                  _placeholder={{ color: "gray.400" }}
-                />
-                <Button
-                  position="absolute"
-                  right="12px"
-                  top="50%"
-                  transform="translateY(-50%)"
-                  h="1.75rem"
-                  minW="1.75rem"
-                  size="sm"
-                  onClick={handleClickShowPassword}
-                  variant="ghost"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  fontSize="md"
-                  color="gray.500"
-                >
-                  <Box
-                    as="span"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    key={showPassword ? "eye-off" : "eye"}
-                  >
-                    {showPassword ? (
-                      <FiEyeOff size={16} />
-                    ) : (
-                      <FiEye size={16} />
-                    )}
-                  </Box>
-                </Button>
-              </Flex>
-            </Box>
-
-            {/* Verification code */}
-            <Box>
-              <Text mb={2} color="gray.800">
-                Email verification code
-              </Text>
-              <Flex position="relative">
-                <Input
-                  placeholder="Email verification code"
-                  size="lg"
-                  borderRadius="full"
-                  w="full"
-                  pl={6}
-                  color="gray.800"
-                  _placeholder={{ color: "gray.400" }}
-                />
-                <Button
-                  position="absolute"
-                  right="8px"
-                  top="50%"
-                  transform="translateY(-50%)"
-                  h="1.75rem"
-                  size="sm"
-                  onClick={handleSendCode}
-                  color="gray.600"
-                  bg="transparent"
-                  _hover={{ bg: "gray.100" }}
-                >
-                  Send
-                </Button>
-              </Flex>
-            </Box>
-
-            {/* Create account button */}
-            <Button
-              mt={6}
-              size="lg"
-              bg="gray.400"
-              color="white"
-              _hover={{ bg: "gray.500" }}
-              borderRadius="full"
-            >
-              Create Account
-            </Button>
-          </Stack>
-
-          {/* Login link */}
-          <Flex pt={6}>
-            <Text color="gray.500" mr={1}>
-              Already have an account?
-            </Text>
-            <Link color="blue.500" href="/signin" fontWeight="semibold">
-              Sign In
-            </Link>
-          </Flex>
-        </Stack>
-      </Box>
     </Box>
   );
 }
