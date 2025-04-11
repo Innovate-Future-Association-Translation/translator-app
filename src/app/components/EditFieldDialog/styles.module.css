@@ -1,0 +1,318 @@
+/**
+ * src/app/components/EditFieldDialog/styles.module.css
+ * Styles for the edit field dialog component
+ */
+
+ .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog {
+  width: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  max-height: 90vh;
+  animation: slideUp 0.3s ease-out;
+}
+
+.dialogHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dialogTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.closeButton {
+  font-size: 16px;
+  color: #007AFF;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.saveButton {
+  font-size: 16px;
+  font-weight: 500;
+  color: #007AFF;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.saveButton:disabled {
+  color: #ccc;
+  cursor: default;
+}
+
+.dialogContent {
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  outline: none;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  border-color: #007AFF;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.phoneInputContainer {
+  display: flex;
+  width: 100%;
+  margin-bottom: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.countryCodeSelect {
+  min-width: 80px;
+  border: none;
+  background-color: #f9f9f9;
+  border-right: 1px solid #e0e0e0;
+  padding: 0 5px;
+  font-size: 16px;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M10.3 3.3L6 7.6 1.7 3.3c-.4-.4-1-.4-1.4 0s-.4 1 0 1.4l5 5c.2.2.4.3.7.3s.5-.1.7-.3l5-5c.4-.4.4-1 0-1.4s-1-.4-1.4 0z'/%3E%3C/svg%3E");
+  background-position: calc(100% - 5px) center;
+  background-repeat: no-repeat;
+  padding-right: 20px;
+  cursor: pointer;
+}
+
+.phoneNumberInput {
+  flex: 1;
+  border: none;
+  padding: 12px 16px;
+  font-size: 16px;
+  outline: none;
+}
+
+.errorMessage {
+  color: #FF3B30;
+  font-size: 14px;
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+.inputHint {
+  color: #8E8E93;
+  font-size: 14px;
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+.selfDescHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.selfDescTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.closeIcon {
+  font-size: 24px;
+  color: #000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.selfDescContent {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px 16px 16px;
+}
+
+.selfDescTextarea {
+  width: 100%;
+  min-height: 120px;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 16px;
+  resize: none;
+  margin-bottom: 20px;
+  outline: none;
+}
+
+.selfDescTextarea:focus {
+  border-color: #007AFF;
+}
+
+.selfDescSaveButton {
+  width: 100%;
+  padding: 14px;
+  background-color: #222;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+.standardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.standardTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.standardContent {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px 16px 16px;
+}
+
+.standardInput,
+.standardSelect {
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  outline: none;
+}
+
+.standardInput:focus,
+.standardSelect:focus {
+  border-color: #007AFF;
+}
+
+.phoneInputWrapper {
+  margin-bottom: 20px;
+}
+
+.phoneInputContainer {
+  display: flex;
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.countryCodeSelect {
+  width: 70px;
+  border: none;
+  background-color: transparent;
+  border-right: 1px solid #e0e0e0;
+  padding: 16px 8px;
+  font-size: 16px;
+  outline: none;
+  text-align: center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.phoneNumberInput {
+  flex: 1;
+  border: none;
+  padding: 16px;
+  font-size: 16px;
+  outline: none;
+}
+
+.standardSaveButton {
+  width: 100%;
+  padding: 14px;
+  background-color: #222;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+.standardSaveButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 768px) {
+  .dialog {
+    max-width: 500px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+}
