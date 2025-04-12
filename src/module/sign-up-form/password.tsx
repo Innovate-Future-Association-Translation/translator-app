@@ -47,11 +47,15 @@ return (
         pl={4}
         _placeholder={{ color: "gray.400", fontSize: "sm" }}
         border="1px solid"
-        borderColor="gray.300"
+        borderColor={errors.email ? 'red.500' : 'gray.300'}
         color="gray.800"
         width="100%"
         maxWidth="400px"
         mx="auto"
+        _focusVisible={{
+          borderColor: errors.email ? 'red.500' : 'blue.500',
+          boxShadow: 'none',
+        }}
         {...register("password")}
         pr="4.5rem"
       />

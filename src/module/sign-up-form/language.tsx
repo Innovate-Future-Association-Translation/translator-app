@@ -52,8 +52,8 @@ return (
         <FiChevronRight />
     </Box>
     </Flex>
-    <FormErrorMessage>
-      {errors.language?.message}
+    <FormErrorMessage mt={1} color="red.500">
+        {errors.language?.message}
     </FormErrorMessage>
 </FormControl>
 );

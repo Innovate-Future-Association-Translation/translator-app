@@ -71,7 +71,7 @@ return (
 {/* title - width responsive design */}
 <Box mb={10} maxW={{ base: "70%", md: "100%" }} mx="auto">
     {/* Logo and menu */}
-    <Flex justify="space-between" align="center" mb={8} width="100%">
+    <Flex justify="space-between" align="center" mb={10} width="100%">
     <Flex align="center">
         <Image
         src="/icons/logo.png"
@@ -85,7 +85,9 @@ return (
         IFA TRANSLATOR
         </Text>
     </Flex>
-    <Text fontSize="2xl">☰</Text>
+    <Box as="button">
+        <Text fontSize="2xl">☰</Text>
+    </Box>
     </Flex>
 
     {/* Sign Up title */}
@@ -95,6 +97,7 @@ return (
     color="black"
     lineHeight="shorter"
     mb={6}
+    mt={4}
     textAlign="left" // force align left
     width="100%" // full container width
     >
