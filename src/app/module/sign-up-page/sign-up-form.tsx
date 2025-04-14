@@ -1,22 +1,15 @@
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FcGoogle } from "react-icons/fc";
-import {
-  Box,
-  Button,
-  Flex,
-  Stack,
-  Text,
-  Link,
-} from "@chakra-ui/react";
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FcGoogle } from 'react-icons/fc';
+import { Box, Button, Flex, Stack, Text, Link } from '@chakra-ui/react';
 
-import { signupSchema, SignupFormData } from "@/app/validation/signup";
-import { InputField } from "@/app/module/common/input-field";
-import { PasswordInput } from "@/app/module/common/password-input";
-import { PhoneInput } from "@/app/module/sign-up-page/phone-input";
-import { LanguageSelect } from "@/app/module/sign-up-page/language-select";
+import { signupSchema, SignupFormData } from '@/app/validation/signup';
+import { InputField } from '@/app/module/common/input-field';
+import { PasswordInput } from '@/app/module/common/password-input';
+import { PhoneInput } from '@/app/module/sign-up-page/phone-input';
+import { LanguageSelect } from '@/app/module/sign-up-page/language-select';
 
 // Sign up form component
 export const SignUpForm = () => {
@@ -28,22 +21,23 @@ export const SignUpForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      language: "",
-      phone: "",
-      selfDescription: "",
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      language: '',
+      phone: '',
+      selfDescription: '',
     },
   });
 
   // Handle Google OAuth signup
   const handleGoogleOauth = () => {
-    window.location.href = "http://localhost:8000/api/v1/users/googleAuth";
+    window.location.href = 'http://localhost:8000/api/v1/users/googleAuth';
   };
 
   // Handle form submission
@@ -51,19 +45,19 @@ export const SignUpForm = () => {
     setIsSubmitting(true);
     try {
       // Simulate API call for registration
-      console.log("Sign-up form data:", data);
-      
+      console.log('Sign-up form data:', data);
+
       // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       // Show success message
-      alert("Sign-up successful!");
-      
+      alert('Sign-up successful!');
+
       // Redirect to sign-in page after successful registration
-      router.push("/sign-in");
+      router.push('/sign-in');
     } catch (error) {
-      // Show error message
-      alert("Sign-up failed. Please try again later.");
+      alert('Sign-up failed. Please try again later.');
+      console.log(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -77,13 +71,13 @@ export const SignUpForm = () => {
       </Text>
 
       {/* Registration form */}
-      <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+      <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
         <Stack w="full" gap={4}>
           {/* Username field */}
           <InputField
             label="Username"
             placeholder="Username"
-            register={register("username")}
+            register={register('username')}
             error={errors.username?.message}
           />
 
@@ -91,7 +85,7 @@ export const SignUpForm = () => {
           <InputField
             label="Email"
             placeholder="Email Address"
-            register={register("email")}
+            register={register('email')}
             error={errors.email?.message}
             isRequired
           />
@@ -100,7 +94,7 @@ export const SignUpForm = () => {
           <PasswordInput
             label="Password"
             placeholder="Password"
-            register={register("password")}
+            register={register('password')}
             error={errors.password?.message}
             isRequired
           />
@@ -109,28 +103,22 @@ export const SignUpForm = () => {
           <PasswordInput
             label="Confirm password"
             placeholder="Confirm password"
-            register={register("confirmPassword")}
+            register={register('confirmPassword')}
             error={errors.confirmPassword?.message}
             isRequired
           />
 
           {/* Language select field */}
-          <LanguageSelect
-            register={register("language")}
-            error={errors.language?.message}
-          />
+          <LanguageSelect register={register('language')} error={errors.language?.message} />
 
           {/* Phone number field */}
-          <PhoneInput
-            register={register("phone")}
-            error={errors.phone?.message}
-          />
+          <PhoneInput setValue={setValue} error={errors.phone?.message} />
 
           {/* Self-description field */}
           <InputField
             label="Self-description"
             placeholder="Self-description"
-            register={register("selfDescription")}
+            register={register('selfDescription')}
             error={errors.selfDescription?.message}
             isTextarea
             rows={4}
@@ -141,12 +129,12 @@ export const SignUpForm = () => {
             size="lg"
             bg="gray.400"
             color="white"
-            _hover={{ bg: "gray.500" }}
+            _hover={{ bg: 'gray.500' }}
             borderRadius="full"
             type="submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Creating Account..." : "Create Account"}
+            {isSubmitting ? 'Creating Account...' : 'Create Account'}
           </Button>
         </Stack>
       </form>
@@ -168,14 +156,7 @@ export const SignUpForm = () => {
         gap={2}
         onClick={handleGoogleOauth}
       >
-        <Box
-          as="span"
-          w="20px"
-          h="20px"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
+        <Box as="span" w="20px" h="20px" display="flex" alignItems="center" justifyContent="center">
           <FcGoogle size={20} />
         </Box>
         <Text>Sign up with Google</Text>
@@ -191,4 +172,4 @@ export const SignUpForm = () => {
       </Flex>
     </Stack>
   );
-}; 
+};
