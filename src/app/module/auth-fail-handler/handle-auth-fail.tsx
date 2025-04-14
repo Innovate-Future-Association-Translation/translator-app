@@ -1,18 +1,14 @@
-"use client";
-import { Box, Card, Button } from "@chakra-ui/react";
-import ThirdPartyFailureAction from "./thrid-party-failure-action/third-party-failure-action";
-import React from "react";
+'use client';
+import { Box, Card } from '@chakra-ui/react';
+import ThirdPartyFailureAction from './thrid-party-failure-action/third-party-failure-action';
+import React from 'react';
 
 interface authErrorMessage {
   switchToSignUp: () => void;
   switchToSignIn: () => void;
   errorMessage: string;
 }
-function AuthFailHandler({
-  errorMessage,
-  switchToSignIn,
-  switchToSignUp,
-}: authErrorMessage) {
+function AuthFailHandler({ errorMessage, switchToSignIn, switchToSignUp }: authErrorMessage) {
   return (
     <Box
       minH="100vh"
@@ -52,10 +48,7 @@ function AuthFailHandler({
           <Card.Description>{errorMessage}</Card.Description>
         </Card.Body>
 
-        <ThirdPartyFailureAction
-          switchToSignIn={switchToSignIn}
-          switchToSignUp={switchToSignUp}
-        />
+        <ThirdPartyFailureAction switchToSignIn={switchToSignIn} switchToSignUp={switchToSignUp} />
       </Card.Root>
     </Box>
   );
