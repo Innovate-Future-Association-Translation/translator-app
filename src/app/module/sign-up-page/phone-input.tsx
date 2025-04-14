@@ -23,7 +23,7 @@ export const PhoneInput = ({ setValue, error }: PhoneInputProps) => {
   useEffect(() => {
     const fullPhone = `${countryCode}${phoneNumber}`;
     setValue('phone', fullPhone, {
-      shouldValidate: true,
+      shouldValidate: false,
       shouldDirty: true,
     });
   }, [countryCode, phoneNumber]);
