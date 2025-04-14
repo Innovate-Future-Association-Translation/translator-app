@@ -21,6 +21,7 @@ export const SignUpForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -111,7 +112,7 @@ export const SignUpForm = () => {
           <LanguageSelect register={register('language')} error={errors.language?.message} />
 
           {/* Phone number field */}
-          <PhoneInput register={register('phone')} error={errors.phone?.message} />
+          <PhoneInput setValue={setValue} error={errors.phone?.message} />
 
           {/* Self-description field */}
           <InputField
