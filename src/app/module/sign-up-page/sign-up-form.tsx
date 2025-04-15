@@ -10,6 +10,7 @@ import { InputField } from '@/app/module/common/input-field';
 import { PasswordInput } from '@/app/module/common/password-input';
 import { PhoneInput } from '@/app/module/sign-up-page/phone-input';
 import { LanguageSelect } from '@/app/module/sign-up-page/language-select';
+import axios from 'axios';
 
 // Sign up form component
 export const SignUpForm = () => {
@@ -25,7 +26,7 @@ export const SignUpForm = () => {
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      username: '',
+      name: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -48,16 +49,35 @@ export const SignUpForm = () => {
       console.log('Sign-up form data:', data);
 
       // TODO: Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await axios.post('http://localhost:8000/api/v1/users/register', {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        language: data.language,
+        mobile: data.phone,
+        selfDescription: data.selfDescription,
+      });
 
       // Show success message
       alert('Sign-up successful!');
 
       // Redirect to sign-in page after successful registration
       router.push('/sign-in');
-    } catch (error) {
-      alert('Sign-up failed. Please try again later.');
-      console.log(error);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 409) {
+          alert('This email is already registered.');
+        } else if (error.response?.status === 406) {
+          alert('Invalid input format. Please check your fields.');
+        } else if (error.response?.status === 500) {
+          alert('Something went wrong on the server. Please try again later.');
+        } else {
+          alert('Sign-up failed. Please try again.');
+        }
+      } else {
+        alert('An unknown error occurred.');
+      }
+      console.error('Sign-up error:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -77,8 +97,8 @@ export const SignUpForm = () => {
           <InputField
             label="Username"
             placeholder="Username"
-            register={register('username')}
-            error={errors.username?.message}
+            register={register('name')}
+            error={errors.name?.message}
           />
 
           {/* Email field */}
