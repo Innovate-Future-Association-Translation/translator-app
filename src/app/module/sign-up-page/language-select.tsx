@@ -5,14 +5,14 @@ import { UseFormRegisterReturn } from 'react-hook-form';
 
 // Language list
 const LANGUAGES = [
-  { value: 'English', label: 'English' },
-  { value: 'Chinese', label: 'Chinese' },
-  { value: 'French', label: 'French' },
-  { value: 'Korean', label: 'Korean' },
-  { value: 'Japanese', label: 'Japanese' },
-  { value: 'Arabic', label: 'Arabic' },
-  { value: 'Russian', label: 'Russian' },
-  { value: 'Thai', label: 'Thai' },
+  { value: 'en', label: 'English' },
+  { value: 'zh', label: 'Chinese' },
+  { value: 'fr', label: 'French' },
+  { value: 'ko', label: 'Korean' },
+  { value: 'ja', label: 'Japanese' },
+  { value: 'ar', label: 'Arabic' },
+  { value: 'ru', label: 'Russian' },
+  { value: 'th', label: 'Thai' },
 ];
 
 // Language select props
@@ -31,11 +31,13 @@ export const LanguageSelect = ({ register, error }: LanguageSelectProps) => {
     setSelectedLanguage(language);
     setShowLanguages(false);
 
+    const selectedLangValue = LANGUAGES.find((lang) => lang.label === language)?.value;
+
     // Trigger form update using register's onChange
     const event = {
       target: {
         name: register.name,
-        value: language,
+        value: selectedLangValue,
       },
     } as React.ChangeEvent<HTMLInputElement>;
 
@@ -116,7 +118,7 @@ export const LanguageSelect = ({ register, error }: LanguageSelectProps) => {
                 px={3}
                 py={2}
                 _hover={{ bg: 'gray.100' }}
-                onClick={() => handleSelectLanguage(lang.value)}
+                onClick={() => handleSelectLanguage(lang.label)}
               >
                 {lang.label}
               </Box>

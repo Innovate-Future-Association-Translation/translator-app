@@ -3,13 +3,16 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FcGoogle } from 'react-icons/fc';
 import { Box, Button, Flex, Stack, Text, Link } from '@chakra-ui/react';
+import axios from 'axios';
 
 import { signinSchema, SigninFormData } from '@/app/validation/signin';
 import { InputField } from '@/app/module/common/input-field';
 import { PasswordInput } from '@/app/module/common/password-input';
+import { useRouter } from 'next/navigation';
 
 // Sign in form component
 export const SignInForm = () => {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // react-hook-form configuration
@@ -37,16 +40,33 @@ export const SignInForm = () => {
       console.log('Sign-in form data:', data);
 
       // TODO: Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await axios.post('http://localhost:8000/api/v1/users/login', {
+        email: data.email,
+        password: data.password,
+      });
 
-      alert('Sign-in successful!');
-
-      // Example redirect after successful login
-      // router.push("/dashboard");
+      if (response.status === 200) {
+        const { token, redirectUrl } = response.data;
+        localStorage.setItem('authToken', token);
+        window.location.href = redirectUrl;
+        alert('Sign-in successful!');
+      } else {
+        alert('Sign-in failed. Please check your email and password.');
+      }
     } catch (error) {
       // Handle login failure
-      console.error('Sign-in failed:', error);
-      alert('Sign-in failed. Please check your email and password.');
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          alert('Invalid credentials. Please check your email and password.');
+        } else if (error.response?.status === 406) {
+          alert('Invalid credential format. Please check your input.');
+        } else {
+          alert('Sign-in failed. Please try again later.');
+        }
+      } else {
+        alert('An unknown error occurred.');
+      }
+      console.error('Sign-in error:', error);
     } finally {
       setIsSubmitting(false);
     }
