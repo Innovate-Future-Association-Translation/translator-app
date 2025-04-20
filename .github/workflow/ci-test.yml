@@ -1,0 +1,24 @@
+name: Install Frontend Dependencies
+
+on:
+  push:
+    branches:
+      - devops-ben
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'  # 你可以根据需要设置 Node.js 版本
+
+    - name: Install dependencies
+      run: |
+        npm install
+        npm run build
