@@ -8,7 +8,7 @@ on:
 jobs:
   install:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Check out code
       uses: actions/checkout@v2
@@ -16,9 +16,10 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16'  # 你可以根据需要设置 Node.js 版本
+        node-version: '20'  # ✅ 改成符合 Next.js 要求的版本
+        cache: 'npm'
 
-    - name: Install dependencies
+    - name: Install dependencies and build
       run: |
         npm install
         npm run build
