@@ -26,6 +26,7 @@ export const PhoneInput = ({ setValue, error }: PhoneInputProps) => {
       shouldValidate: false,
       shouldDirty: true,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [countryCode, phoneNumber]);
 
   // Toggle country code dropdown visibility
