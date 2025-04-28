@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { authErrorMessages } from '../../lib/authErrorMessage';
 import { getUserProfile } from '@/lib/api';
@@ -11,11 +11,28 @@ export default function AuthCallBack() {
   const [failAuth, setFailAuth] = useState<boolean>(false);
   const { setErrorMessage } = useErrorContext();
 
+  const validateToken = useCallback(
+    async (token: string) => {
+      try {
+        const response = await getUserProfile(token);
+        if (!response.ok) throw new Error(authErrorMessages.INVALID_AUTH_TOKEN);
+        localStorage.setItem('IFA_AuthToken', token);
+        router.replace('/dashboard');
+      } catch (err) {
+        setErrorMessage(authErrorMessages.INVALID_AUTH_TOKEN);
+        localStorage.removeItem('IFA_AuthToken');
+        setFailAuth(true);
+        throw err;
+      }
+    },
+    [router, setErrorMessage]
+  );
+
   useEffect(() => {
     if (failAuth) {
       router.push(`/auth-error-page`);
     }
-  }, [failAuth]);
+  }, [failAuth, router]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -38,20 +55,7 @@ export default function AuthCallBack() {
         setFailAuth(true);
       }
     }
-  }, [router, setErrorMessage]);
+  }, [router, setErrorMessage, validateToken]);
 
-  const validateToken = async (token: string) => {
-    try {
-      const response = await getUserProfile(token);
-      if (!response.ok) throw new Error(authErrorMessages.INVALID_AUTH_TOKEN);
-      localStorage.setItem('IFA_AuthToken', token);
-      router.replace('/dashboard');
-    } catch (err) {
-      setErrorMessage(authErrorMessages.INVALID_AUTH_TOKEN);
-      localStorage.removeItem('IFA_AuthToken');
-      setFailAuth(true);
-      throw err;
-    }
-  };
   return <LoadingUser />;
 }
