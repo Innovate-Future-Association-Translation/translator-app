@@ -27,7 +27,8 @@ export const SignInForm = () => {
   });
 
   const handleGoogleOauth = () => {
-    window.location.href = 'http://localhost:8000/api/v1/users/googleAuth';
+    window.location.href =
+      'http://translator-alb-1789479950.ap-southeast-2.elb.amazonaws.com/api/v1/users/googleAuth';
     console.log('Initiating Google Sign-In...');
   };
 
@@ -38,10 +39,13 @@ export const SignInForm = () => {
       console.log('Sign-in form data:', data);
 
       // TODO: Replace with actual API call
-      const response = await axios.post('http://localhost:8000/api/v1/users/login', {
-        email: data.email,
-        password: data.password,
-      });
+      const response = await axios.post(
+        'http://translator-alb-1789479950.ap-southeast-2.elb.amazonaws.com/api/v1/users/login',
+        {
+          email: data.email,
+          password: data.password,
+        }
+      );
 
       if (response.status === 200) {
         const { token, redirectUrl } = response.data;

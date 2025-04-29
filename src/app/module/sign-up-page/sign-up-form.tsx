@@ -38,7 +38,8 @@ export const SignUpForm = () => {
 
   // Handle Google OAuth signup
   const handleGoogleOauth = () => {
-    window.location.href = 'http://localhost:8000/api/v1/users/googleAuth';
+    window.location.href =
+      'http://translator-alb-1789479950.ap-southeast-2.elb.amazonaws.com/api/v1/users/googleAuth';
   };
 
   // Handle form submission
@@ -49,14 +50,17 @@ export const SignUpForm = () => {
       console.log('Sign-up form data:', data);
 
       // TODO: Replace with actual API call
-      await axios.post('http://localhost:8000/api/v1/users/register', {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-        language: data.language,
-        mobile: data.phone,
-        selfDescription: data.selfDescription,
-      });
+      await axios.post(
+        'http://translator-alb-1789479950.ap-southeast-2.elb.amazonaws.com/api/v1/users/register',
+        {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          language: data.language,
+          mobile: data.phone,
+          selfDescription: data.selfDescription,
+        }
+      );
 
       // Show success message
       alert('Sign-up successful!');
