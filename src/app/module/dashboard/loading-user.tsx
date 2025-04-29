@@ -1,4 +1,4 @@
-import { Text, Box, Spinner } from "@chakra-ui/react";
+import { Text, Box, Spinner } from '@chakra-ui/react';
 function LoadingUser() {
   return (
     <Box textAlign="center">
