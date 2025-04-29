@@ -1,13 +1,5 @@
-import React from "react";
-import {
-  Text,
-  Box,
-  Button,
-  Avatar,
-  Card,
-  Stack,
-  HStack,
-} from "@chakra-ui/react";
+import React from 'react';
+import { Text, Box, Button, Avatar, Card, Stack, HStack } from '@chakra-ui/react';
 
 interface UserProfile {
   name: string;
@@ -19,8 +11,7 @@ interface UserProfile {
 }
 
 function UserProfile(userData: UserProfile) {
-  const { name, email, language, mobile, selfDescription, handleLogout } =
-    userData;
+  const { name, email, language, mobile, selfDescription, handleLogout } = userData;
   return (
     <Box
       bg="white"
@@ -60,9 +51,9 @@ function UserProfile(userData: UserProfile) {
             fontWeight="bold"
             boxShadow="lg"
             _hover={{
-              bg: "red.600",
-              transform: "scale(1.05)",
-              boxShadow: "xl",
+              bg: 'red.600',
+              transform: 'scale(1.05)',
+              boxShadow: 'xl',
             }}
             onClick={handleLogout}
           >

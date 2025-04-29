@@ -1,10 +1,10 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import UserProfile from "../module/dashboard/user-profile";
-import LogoutUser from "../module/dashboard/logout-user";
-import LoadingUser from "../module/dashboard/loading-user";
-import { getUserProfile } from "@/lib/api";
+'use client';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import UserProfile from '../module/dashboard/user-profile';
+import LogoutUser from '../module/dashboard/logout-user';
+import LoadingUser from '../module/dashboard/loading-user';
+import { getUserProfile } from '@/lib/api';
 
 interface User {
   name: string;
@@ -22,23 +22,23 @@ export default function Dashboard() {
 
   const handleLogout = () => {
     setLoading(true);
-    localStorage.removeItem("IFA_AuthToken");
-    router.push("/signup");
+    localStorage.removeItem('IFA_AuthToken');
+    router.push('/signup');
   };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const tokenFromURL = urlParams.get("token");
+    const tokenFromURL = urlParams.get('token');
 
     if (tokenFromURL) {
-      localStorage.setItem("IFA_AuthToken", tokenFromURL);
+      localStorage.setItem('IFA_AuthToken', tokenFromURL);
       setToken(tokenFromURL);
-      router.replace("/dashboard");
+      router.replace('/dashboard');
     }
   }, [router]);
 
   useEffect(() => {
-    const tokenFromLocalStorage = localStorage.getItem("IFA_AuthToken");
+    const tokenFromLocalStorage = localStorage.getItem('IFA_AuthToken');
     if (tokenFromLocalStorage) {
       setToken(tokenFromLocalStorage);
     }
@@ -50,7 +50,7 @@ export default function Dashboard() {
         try {
           const response = await getUserProfile(token);
           if (!response.ok) {
-            throw new Error("Failed to fetch user data");
+            throw new Error('Failed to fetch user data');
           }
           const data = await response.json();
           setUser(data);

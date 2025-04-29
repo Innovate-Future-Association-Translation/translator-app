@@ -6,10 +6,10 @@
  * All pages using Chakra UI components need to be wrapped by this provider
  */
 
-"use client";
+'use client';
 
-import { ChakraProvider, createSystem, defaultConfig } from "@chakra-ui/react";
-import React from "react";
+import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
+import React from 'react';
 // Create custom system
 const system = createSystem(defaultConfig);
 
