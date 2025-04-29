@@ -11,6 +11,7 @@ export default function AuthCallBack() {
   const [failAuth, setFailAuth] = useState<boolean>(false);
   const { setErrorMessage } = useErrorContext();
 
+<<<<<<< HEAD
   const validateToken = useCallback(
     async (token: string) => {
       try {
@@ -27,6 +28,21 @@ export default function AuthCallBack() {
     },
     [router, setErrorMessage]
   );
+=======
+  const validateToken = async (token: string) => {
+    try {
+      const response = await getUserProfile(token);
+      if (!response.ok) throw new Error(authErrorMessages.INVALID_AUTH_TOKEN);
+      localStorage.setItem('IFA_AuthToken', token);
+      router.replace('/dashboard/home');
+    } catch (err) {
+      setErrorMessage(authErrorMessages.INVALID_AUTH_TOKEN);
+      localStorage.removeItem('IFA_AuthToken');
+      setFailAuth(true);
+      throw err;
+    }
+  };
+>>>>>>> 53018ff (feat/IT-38-Create-instant-meeting(Frontend))
 
   useEffect(() => {
     if (failAuth) {

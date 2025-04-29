@@ -28,9 +28,15 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@hookform/resolvers": "^5.0.1",
+<<<<<<< HEAD
+=======
+    "@mui/icons-material": "^7.0.2",
+    "@mui/material": "^7.0.2",
+>>>>>>> 53018ff (feat/IT-38-Create-instant-meeting(Frontend))
     "axios": "^1.9.0",
     "framer-motion": "^12.4.7",
     "next": "15.2.0",
+    "next-qrcode": "^2.5.1",
     "prettier": "^3.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
