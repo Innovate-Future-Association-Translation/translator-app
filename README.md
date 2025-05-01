@@ -33,8 +33,18 @@ pnpm dev
 # or
 bun dev
 ```
-
 Open [http://localhost:3000/home](http://localhost:3000/home) in your browser to view the application.
+
+## Environment Setup
+Before running the application, ensure you have the following environment configured:
+
+Create a `.env.local` file in the project root (do not commit this file to version control) and add the following variable:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v1
+```
+This variable replaces hardcoded API URLs with a dynamic value, allowing seamless switching between development and production environments.
+
 
 ## Technology Stack
 
