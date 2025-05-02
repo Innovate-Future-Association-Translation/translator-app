@@ -8,13 +8,10 @@ import axios from 'axios';
 import { signinSchema, SigninFormData } from '@/app/validation/signin';
 import { InputField } from '@/app/module/common/input-field';
 import { PasswordInput } from '@/app/module/common/password-input';
-import { useRouter } from 'next/navigation';
 
 // Sign in form component
 export const SignInForm = () => {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   // react-hook-form configuration
   const {
     register,
