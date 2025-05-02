@@ -4,17 +4,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FcGoogle } from 'react-icons/fc';
 import { Box, Button, Flex, Stack, Text, Link } from '@chakra-ui/react';
 import axios from 'axios';
-
 import { signinSchema, SigninFormData } from '@/app/validation/signin';
 import { InputField } from '@/app/module/common/input-field';
 import { PasswordInput } from '@/app/module/common/password-input';
-import { useRouter } from 'next/navigation';
+import { API_BASE_URL } from '@/lib/api';
 
 // Sign in form component
 export const SignInForm = () => {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   // react-hook-form configuration
   const {
     register,
@@ -29,7 +26,7 @@ export const SignInForm = () => {
   });
 
   const handleGoogleOauth = () => {
-    window.location.href = 'http://localhost:8000/api/v1/users/googleAuth';
+    window.location.href = `${API_BASE_URL}/users/googleAuth`;
     console.log('Initiating Google Sign-In...');
   };
 
@@ -40,7 +37,7 @@ export const SignInForm = () => {
       console.log('Sign-in form data:', data);
 
       // TODO: Replace with actual API call
-      const response = await axios.post('http://localhost:8000/api/v1/users/login', {
+      const response = await axios.post(`${API_BASE_URL}/users/login`, {
         email: data.email,
         password: data.password,
       });

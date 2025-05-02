@@ -11,6 +11,7 @@ import { PasswordInput } from '@/app/module/common/password-input';
 import { PhoneInput } from '@/app/module/sign-up-page/phone-input';
 import { LanguageSelect } from '@/app/module/sign-up-page/language-select';
 import axios from 'axios';
+import { API_BASE_URL } from '@/lib/api';
 
 // Sign up form component
 export const SignUpForm = () => {
@@ -38,7 +39,7 @@ export const SignUpForm = () => {
 
   // Handle Google OAuth signup
   const handleGoogleOauth = () => {
-    window.location.href = 'http://localhost:8000/api/v1/users/googleAuth';
+    window.location.href = `${API_BASE_URL}/users/googleAuth`;
   };
 
   // Handle form submission
@@ -49,7 +50,7 @@ export const SignUpForm = () => {
       console.log('Sign-up form data:', data);
 
       // TODO: Replace with actual API call
-      await axios.post('http://localhost:8000/api/v1/users/register', {
+      await axios.post(`${API_BASE_URL}/users/register`, {
         name: data.name,
         email: data.email,
         password: data.password,
