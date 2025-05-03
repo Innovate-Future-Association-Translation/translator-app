@@ -79,7 +79,7 @@ pipeline {
 
         stage('Verify Deployment') {
             steps {
-                sh 'aws s3 ls s3://ifa-frontend/ --recursive'
+                sh 'aws s3 ls s3://ifa-frontend-s3/ --recursive'
             }
         }
     }
