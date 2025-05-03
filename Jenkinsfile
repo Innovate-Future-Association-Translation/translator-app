@@ -76,12 +76,6 @@ pipeline {
             }
         }
 
-        stage('Who Am I') {
-            steps {
-                sh 'aws sts get-caller-identity'
-                
-            }
-        }
 
         stage('Verify Deployment') {
             steps {
