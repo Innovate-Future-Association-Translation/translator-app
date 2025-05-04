@@ -17,24 +17,12 @@ First, install dependencies and run the development server:
 ```bash
 # Install dependencies
 npm install
-# or
-yarn install
-# or
-pnpm install
-# or
-bun install
 
 # Start the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000/home](http://localhost:3000/home) in your browser to view the application.
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
 ## Technology Stack
 
@@ -46,12 +34,11 @@ Open [http://localhost:3000/home](http://localhost:3000/home) in your browser to
 
 ## Project Structure
 
-- `/src/app` - Main application code
-  - `/components` - Reusable components
-  - `/styles` - Style files
-  - `/utils` - Utility functions
-  - `/api` - API route handlers
-  - `/hooks` - Custom React hooks
+- `/src/app`- Page-level routing, used to routes in the app
+- `src/app/page-name`- Used for page routing src/app/module- components used in page
+- `src/app/validation`- Form validation logic (e.g, schemas, validators) src/app/lib/api-API route handlers
+- `src/app/context` - Context providers for global state public- Used to store the project image and logo
+- `.env`-used to store project environment variable, project team member required to copy from create .env file in project root folder and paste the environment variable to .env file before npm
 
 ## Deployment
 
