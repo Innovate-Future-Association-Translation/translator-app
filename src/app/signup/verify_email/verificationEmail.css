@@ -1,0 +1,33 @@
+.WholePage {
+  background-color: rgba(128, 128, 128, 0.2);
+}
+
+.navbar {
+  z-index: -1;
+}
+
+.Verification-Section {
+  background-color: white;
+  padding: 10px 30px 40px 30px;
+  border-radius: 20px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: content-box;
+}
+
+.popup {
+  z-index: 1;
+}
+
+@media screen and (max-width: 600px) {
+  .WholePage {
+    background-color: white;
+  }
+
+  .closeButton {
+    display: none;
+  }
+}
