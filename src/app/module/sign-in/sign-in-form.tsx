@@ -2,7 +2,14 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FcGoogle } from 'react-icons/fc';
-import { Box, Button, Flex, Stack, Text, Link } from '@chakra-ui/react';
+import { 
+  Box, 
+  Button, 
+  Flex, 
+  Stack, 
+  Text, 
+  Link
+} from '@chakra-ui/react';
 import axios from 'axios';
 import { signinSchema, SigninFormData } from '@/app/validation/signin';
 import { InputField } from '@/app/module/common/input-field';
@@ -12,11 +19,14 @@ import { API_BASE_URL } from '@/lib/api';
 // Sign in form component
 export const SignInForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+  
   // react-hook-form configuration
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<SigninFormData>({
     resolver: zodResolver(signinSchema),
     defaultValues: {
@@ -32,11 +42,9 @@ export const SignInForm = () => {
 
   const onSubmit = async (data: SigninFormData) => {
     setIsSubmitting(true);
+    setServerError(null);
+    
     try {
-      // Simulate API call for authentication
-      console.log('Sign-in form data:', data);
-
-      // TODO: Replace with actual API call
       const response = await axios.post(`${API_BASE_URL}/users/login`, {
         email: data.email,
         password: data.password,
@@ -46,26 +54,35 @@ export const SignInForm = () => {
         const { token, redirectUrl } = response.data;
         localStorage.setItem('authToken', token);
         window.location.href = redirectUrl;
-        alert('Sign-in successful!');
       } else {
-        alert('Sign-in failed. Please check your email and password.');
+        setServerError('Sign-in failed. Please check your credentials.');
       }
     } catch (error) {
-      // Handle login failure
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401) {
-          alert('Invalid credentials. Please check your email and password.');
-        } else if (error.response?.status === 406) {
-          alert('Invalid credential format. Please check your input.');
-        } else {
-          alert('Sign-in failed. Please try again later.');
-        }
-      } else {
-        alert('An unknown error occurred.');
-      }
-      console.error('Sign-in error:', error);
+      handleLoginError(error);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleLoginError = (error: any) => {
+    if (!axios.isAxiosError(error)) {
+      setServerError('An unknown error occurred. Please check your network or contact our technical support');
+      return;
+    }
+
+    const status = error.response?.status;
+    const errorMessage = error.response?.data?.message || '';
+    
+    if (status === 401) {
+      if (errorMessage.includes('email is not verified')) {
+        setServerError('Email is not verified. Please check your inbox to complete verification.');
+      } else {
+        setServerError('Invalid email or password. Please try again.');
+      }
+    } else if (status === 406) {
+      setServerError('Invalid input format. Please check your email and password format.');
+    } else {
+      setServerError('Sign-in failed. Please check your network or contact our technical support.');
     }
   };
 
@@ -77,6 +94,21 @@ export const SignInForm = () => {
       <Text color="gray.600" mt={-4} mb={2}>
         Welcome to IFA!
       </Text>
+
+      {serverError && (
+        <Box 
+          w="full" 
+          p={3} 
+          bg="red.50" 
+          color="red.600" 
+          borderRadius="md" 
+          borderWidth="1px" 
+          borderColor="red.200"
+          mb={4}
+        >
+          {serverError}
+        </Box>
+      )}
 
       {/* Sign-in form */}
       <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>

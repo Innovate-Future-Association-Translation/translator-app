@@ -5,8 +5,8 @@ import { Suspense } from 'react';
 import { Box, Flex, Image, useBreakpointValue } from '@chakra-ui/react';
 
 import { Navbar } from '@/app/module/common/navbar';
-import { SignUpForm } from '../module/sign-up-page/sign-up-form';
-import { outerBoxProps, scrollBoxProps } from '../module/sign-up-page/signup-style';
+import { SignUpForm } from '../module/sign-up/sign-up-form';
+import { outerBoxProps, scrollBoxProps } from '../module/sign-up/signup-style';
 
 export default function SignUpPage() {
   return (

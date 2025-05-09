@@ -6,7 +6,7 @@ import { UseFormSetValue } from 'react-hook-form';
 import { SignupFormData } from '@/app/validation/signup';
 
 // Country code list
-const COUNTRY_CODES = ['+61', '+86', '+1', '+44', '+81', '+82'];
+const COUNTRY_CODES = ['+61', '0'];
 
 // Phone input props
 interface PhoneInputProps {
@@ -22,11 +22,12 @@ export const PhoneInput = ({ setValue, error }: PhoneInputProps) => {
 
   useEffect(() => {
     const fullPhone = `${countryCode}${phoneNumber}`;
+    
     setValue('phone', fullPhone, {
       shouldValidate: false,
       shouldDirty: true,
     });
-  }, [countryCode, phoneNumber]);
+  }, [countryCode, phoneNumber, setValue]);
 
   // Toggle country code dropdown visibility
   const handleToggleCountryCodes = (e: React.MouseEvent) => {
@@ -41,6 +42,13 @@ export const PhoneInput = ({ setValue, error }: PhoneInputProps) => {
     e.stopPropagation(); // Prevent event bubbling
     setCountryCode(code);
     setShowCountryCodes(false);
+  };
+
+  const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value) || value === '') {
+      setPhoneNumber(value);
+    }
   };
 
   return (
@@ -62,7 +70,7 @@ export const PhoneInput = ({ setValue, error }: PhoneInputProps) => {
         bg="white"
         transition="border-color 0.2s"
         _focusWithin={{
-          borderColor: 'blue.500',
+          borderColor: error ? 'red.500' : 'blue.500',
           boxShadow: 'none',
         }}
       >
@@ -125,8 +133,9 @@ export const PhoneInput = ({ setValue, error }: PhoneInputProps) => {
 
         {/* Phone number input field */}
         <Input
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          placeholder="Phone number"
+          onChange={handlePhoneNumberChange}
+          value={phoneNumber}
+          placeholder={"Phone number"}
           fontSize="md"
           color="gray.800"
           _placeholder={{ color: 'gray.400' }}

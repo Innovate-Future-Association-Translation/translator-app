@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 import { Box, Flex, Image, useBreakpointValue } from '@chakra-ui/react';
 
 import { Navbar } from '@/app/module/common/navbar';
-import { SignInForm } from '../module/sign-in-page/sign-in-form';
+import { SignInForm } from '../module/sign-in/sign-in-form';
 
 // Default export for the Sign In page
 export default function SignInPage() {
