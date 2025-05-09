@@ -3,13 +3,20 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FcGoogle } from 'react-icons/fc';
-import { Box, Button, Flex, Stack, Text, Link } from '@chakra-ui/react';
+import { 
+  Box, 
+  Button, 
+  Flex, 
+  Stack, 
+  Text, 
+  Link
+} from '@chakra-ui/react';
 
 import { signupSchema, SignupFormData } from '@/app/validation/signup';
 import { InputField } from '@/app/module/common/input-field';
 import { PasswordInput } from '@/app/module/common/password-input';
-import { PhoneInput } from '@/app/module/sign-up-page/phone-input';
-import { LanguageSelect } from '@/app/module/sign-up-page/language-select';
+import { PhoneInput } from '@/app/module/sign-up/phone-input';
+import { LanguageSelect } from '@/app/module/sign-up/language-select';
 import axios from 'axios';
 import { API_BASE_URL } from '@/lib/api';
 
@@ -17,6 +24,7 @@ import { API_BASE_URL } from '@/lib/api';
 export const SignUpForm = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   // react-hook-form configuration
   const {
@@ -24,8 +32,10 @@ export const SignUpForm = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    setError,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
+    mode: "onSubmit",
     defaultValues: {
       name: '',
       email: '',
@@ -45,11 +55,9 @@ export const SignUpForm = () => {
   // Handle form submission
   const onSubmit = async (data: SignupFormData) => {
     setIsSubmitting(true);
+    setServerError(null);
+    
     try {
-      // Simulate API call for registration
-      console.log('Sign-up form data:', data);
-
-      // TODO: Replace with actual API call
       await axios.post(`${API_BASE_URL}/users/register`, {
         name: data.name,
         email: data.email,
@@ -59,29 +67,36 @@ export const SignUpForm = () => {
         selfDescription: data.selfDescription,
       });
 
-      // Show success message
-      alert('Sign-up successful!');
-
       // Redirect to sign-in page after successful registration
       router.push('/sign-in');
     } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 409) {
-          alert('This email is already registered.');
-        } else if (error.response?.status === 406) {
-          alert('Invalid input format. Please check your fields.');
-        } else if (error.response?.status === 500) {
-          alert('Something went wrong on the server. Please try again later.');
-        } else {
-          alert('Sign-up failed. Please try again.');
-        }
-      } else {
-        alert('An unknown error occurred.');
-      }
-      console.error('Sign-up error:', error);
+      handleSignupError(error);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSignupError = (error: unknown) => {
+    if (!axios.isAxiosError(error)) {
+      setServerError('An unknown error occurred. Please try again later.');
+      console.error('Sign-up error:', error);
+      return;
+    }
+
+    const status = error.response?.status;
+    const errorData = error.response?.data;
+    
+    if (status === 409) {
+      setServerError('This email is already registered. Please use another email or sign in directly.');
+    } else if (status === 406) {
+      setServerError('Invalid input format. Please check all fields.');
+    } else if (status === 500) {
+      setServerError('Server error. Please try again later.');
+    } else {
+      setServerError('Registration failed. Please check your network or contact our technical support');
+    }
+    
+    console.error('Sign-up error:', error);
   };
 
   return (
@@ -90,6 +105,21 @@ export const SignUpForm = () => {
       <Text fontSize="2xl" fontWeight="bold" color="black">
         Sign Up
       </Text>
+
+      {serverError && (
+        <Box 
+          w="full" 
+          p={3} 
+          bg="red.50" 
+          color="red.600" 
+          borderRadius="md" 
+          borderWidth="1px" 
+          borderColor="red.200"
+          mb={4}
+        >
+          {serverError}
+        </Box>
+      )}
 
       {/* Registration form */}
       <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
