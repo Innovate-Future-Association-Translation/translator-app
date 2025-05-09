@@ -12,11 +12,13 @@ import { API_BASE_URL } from '@/lib/api';
 // Sign in form component
 export const SignInForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
   // react-hook-form configuration
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<SigninFormData>({
     resolver: zodResolver(signinSchema),
     defaultValues: {
@@ -32,11 +34,8 @@ export const SignInForm = () => {
 
   const onSubmit = async (data: SigninFormData) => {
     setIsSubmitting(true);
+    
     try {
-      // Simulate API call for authentication
-      console.log('Sign-in form data:', data);
-
-      // TODO: Replace with actual API call
       const response = await axios.post(`${API_BASE_URL}/users/login`, {
         email: data.email,
         password: data.password,
@@ -46,27 +45,51 @@ export const SignInForm = () => {
         const { token, redirectUrl } = response.data;
         localStorage.setItem('authToken', token);
         window.location.href = redirectUrl;
-        alert('Sign-in successful!');
       } else {
-        alert('Sign-in failed. Please check your email and password.');
+        setError('email', { type: 'manual', message: 'Invalid credentials' });
+        setError('password', { type: 'manual', message: 'Invalid credentials' });
       }
     } catch (error) {
-      // Handle login failure
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401) {
-          alert('Invalid credentials. Please check your email and password.');
-        } else if (error.response?.status === 406) {
-          alert('Invalid credential format. Please check your input.');
-        } else {
-          alert('Sign-in failed. Please try again later.');
-        }
-      } else {
-        alert('An unknown error occurred.');
-      }
-      console.error('Sign-in error:', error);
+      handleLoginError(error);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleLoginError = (error: any) => {
+    if (!axios.isAxiosError(error)) {
+      setError('email', { type: 'manual', message: 'An unknown error occurred.' });
+      return;
+    }
+
+    const status = error.response?.status;
+    
+    const errorHandlers: Record<number, () => void> = {
+      401: () => {
+        const errorMessage = error.response?.data?.message || '';
+        
+        if (errorMessage.includes('email is not verified')) {
+          setError('email', { 
+            type: 'manual',
+            message: 'Email is not verified. Please check your inbox to complete verification.' 
+          });
+        } else {
+          setError('email', { type: 'manual', message: 'Invalid credentials' });
+          setError('password', { type: 'manual', message: 'Invalid credentials' });
+        }
+      },
+      406: () => {
+        setError('email', { type: 'manual', message: 'Please enter a valid email address' });
+        setError('password', { 
+          type: 'manual', 
+          message: 'The password must be at least 8 characters and contain uppercase and lowercase letters and numbers' 
+        });
+      }
+    };
+
+    (errorHandlers[status || 0] || (() => {
+      setError('email', { type: 'manual', message: 'Sign-in failed. Please try again later.' });
+    }))();
   };
 
   return (

@@ -6,7 +6,7 @@ import { UseFormSetValue } from 'react-hook-form';
 import { SignupFormData } from '@/app/validation/signup';
 
 // Country code list
-const COUNTRY_CODES = ['+61', '+86', '+1', '+44', '+81', '+82'];
+const COUNTRY_CODES = ['+61', '0'];
 
 // Phone input props
 interface PhoneInputProps {
@@ -19,14 +19,38 @@ export const PhoneInput = ({ setValue, error }: PhoneInputProps) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [countryCode, setCountryCode] = useState('+61');
   const [showCountryCodes, setShowCountryCodes] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
+
+
+  const validateAustralianPhoneNumber = (fullNumber: string): boolean => {
+    const australianPhoneRegex = /^(?:\+61|0)4\d{8}$/;
+    return australianPhoneRegex.test(fullNumber);
+  };
 
   useEffect(() => {
     const fullPhone = `${countryCode}${phoneNumber}`;
+    
+    if (phoneNumber) {
+      if (countryCode === '+61' && !phoneNumber.startsWith('4')) {
+        setLocalError('Australian mobile numbers must start with 4 after the country code');
+      } else if (countryCode === '0' && !phoneNumber.startsWith('4')) {
+        setLocalError('Australian mobile numbers must start with 04');
+      } else if (countryCode === '+61' && phoneNumber.startsWith('4') && phoneNumber.length !== 9) {
+        setLocalError('Phone number must be 9 digits after +61 (total 12 characters)');
+      } else if (countryCode === '0' && phoneNumber.startsWith('4') && phoneNumber.length !== 9) {
+        setLocalError('Phone number must be 10 digits including the leading 0');
+      } else {
+        setLocalError(null);
+      }
+    } else {
+      setLocalError(null);
+    }
+    
     setValue('phone', fullPhone, {
       shouldValidate: false,
       shouldDirty: true,
     });
-  }, [countryCode, phoneNumber]);
+  }, [countryCode, phoneNumber, setValue]);
 
   // Toggle country code dropdown visibility
   const handleToggleCountryCodes = (e: React.MouseEvent) => {
@@ -43,6 +67,13 @@ export const PhoneInput = ({ setValue, error }: PhoneInputProps) => {
     setShowCountryCodes(false);
   };
 
+  const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value) || value === '') {
+      setPhoneNumber(value);
+    }
+  };
+
   return (
     <FormControl mb={4} width="100%">
       <FormLabel fontSize="sm" color="gray.800" mb={2}>
@@ -56,13 +87,13 @@ export const PhoneInput = ({ setValue, error }: PhoneInputProps) => {
         alignItems="center"
         h="48px"
         border="1px solid"
-        borderColor={error ? 'red.500' : 'gray.200'}
+        borderColor={(error || localError) ? 'red.500' : 'gray.200'}
         borderRadius="full"
         px={4}
         bg="white"
         transition="border-color 0.2s"
         _focusWithin={{
-          borderColor: 'blue.500',
+          borderColor: (error || localError) ? 'red.500' : 'blue.500',
           boxShadow: 'none',
         }}
       >
@@ -125,8 +156,9 @@ export const PhoneInput = ({ setValue, error }: PhoneInputProps) => {
 
         {/* Phone number input field */}
         <Input
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          placeholder="Phone number"
+          onChange={handlePhoneNumberChange}
+          value={phoneNumber}
+          placeholder={"Phone number"}
           fontSize="md"
           color="gray.800"
           _placeholder={{ color: 'gray.400' }}
@@ -134,9 +166,9 @@ export const PhoneInput = ({ setValue, error }: PhoneInputProps) => {
           _focus={{ boxShadow: 'none', border: 'none' }}
         />
       </Box>
-      {error && (
+      {(error || localError) && (
         <Text color="red.500" mt={1} fontSize="sm">
-          {error}
+          {error || localError}
         </Text>
       )}
     </FormControl>

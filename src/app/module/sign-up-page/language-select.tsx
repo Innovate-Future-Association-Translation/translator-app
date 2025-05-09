@@ -85,7 +85,7 @@ export const LanguageSelect = ({ register, error }: LanguageSelectProps) => {
           }}
         >
           <Text color={selectedLanguage ? '#2D3748' : 'gray.400'} flex="1">
-            {selectedLanguage || 'Select language'}
+            {selectedLanguage || '  Select language'}
           </Text>
           <Box color="gray.400" mr={2.5}>
             <FiChevronDown size={17} />

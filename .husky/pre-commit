@@ -1,4 +1,0 @@
-#!/bin/sh
-
-echo "Running eslint and prettier formatter before commit..."
-npx lint-staged

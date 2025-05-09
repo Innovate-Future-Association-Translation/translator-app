@@ -3,7 +3,14 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FcGoogle } from 'react-icons/fc';
-import { Box, Button, Flex, Stack, Text, Link } from '@chakra-ui/react';
+import { 
+  Box, 
+  Button, 
+  Flex, 
+  Stack, 
+  Text, 
+  Link
+} from '@chakra-ui/react';
 
 import { signupSchema, SignupFormData } from '@/app/validation/signup';
 import { InputField } from '@/app/module/common/input-field';
@@ -24,6 +31,7 @@ export const SignUpForm = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    setError,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -45,11 +53,8 @@ export const SignUpForm = () => {
   // Handle form submission
   const onSubmit = async (data: SignupFormData) => {
     setIsSubmitting(true);
+    
     try {
-      // Simulate API call for registration
-      console.log('Sign-up form data:', data);
-
-      // TODO: Replace with actual API call
       await axios.post(`${API_BASE_URL}/users/register`, {
         name: data.name,
         email: data.email,
@@ -59,29 +64,99 @@ export const SignUpForm = () => {
         selfDescription: data.selfDescription,
       });
 
-      // Show success message
-      alert('Sign-up successful!');
-
       // Redirect to sign-in page after successful registration
       router.push('/sign-in');
     } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 409) {
-          alert('This email is already registered.');
-        } else if (error.response?.status === 406) {
-          alert('Invalid input format. Please check your fields.');
-        } else if (error.response?.status === 500) {
-          alert('Something went wrong on the server. Please try again later.');
-        } else {
-          alert('Sign-up failed. Please try again.');
-        }
-      } else {
-        alert('An unknown error occurred.');
-      }
-      console.error('Sign-up error:', error);
+      handleSignupError(error);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSignupError = (error: unknown) => {
+    if (!axios.isAxiosError(error)) {
+      setError('email', {
+        type: 'manual',
+        message: 'An unknown error occurred.'
+      });
+      console.error('Sign-up error:', error);
+      return;
+    }
+
+    const status = error.response?.status;
+    
+    const errorHandlers: Record<number, () => void> = {
+      409: () => {
+        setError('email', {
+          type: 'manual',
+          message: 'This email is already registered'
+        });
+      },
+      406: () => {
+        const errorData = error.response?.data;
+        const fieldErrorMap: Record<string, () => void> = {
+          name: () => {
+            setError('name', {
+              type: 'manual',
+              message: 'Name must be at least 3 characters long'
+            });
+          },
+          email: () => {
+            setError('email', {
+              type: 'manual',
+              message: 'Invalid email format'
+            });
+          },
+          password: () => {
+            setError('password', {
+              type: 'manual',
+              message: 'Password must be at least 8 characters and contain uppercase and lowercase letters and numbers'
+            });
+          },
+          mobile: () => {
+            setError('phone', {
+              type: 'manual',
+              message: 'Mobile must match Australia standard (+61 or 0 followed by 4 and 8 digits)'
+            });
+          },
+          language: () => {
+            setError('language', {
+              type: 'manual',
+              message: 'Please select a valid language'
+            });
+          },
+          selfDescription: () => {
+            setError('selfDescription', {
+              type: 'manual',
+              message: errorData?.message || 'Invalid self description'
+            });
+          }
+        };
+
+        const field = errorData?.field;
+        (fieldErrorMap[field] || (() => {
+          setError('email', {
+            type: 'manual',
+            message: errorData?.message || 'Invalid input format. Please check your fields.'
+          });
+        }))();
+      },
+      500: () => {
+        setError('email', {
+          type: 'manual',
+          message: 'Something went wrong on the server. Please try again later.'
+        });
+      }
+    };
+
+    (errorHandlers[status || 0] || (() => {
+      setError('email', {
+        type: 'manual',
+        message: 'Sign-up failed. Please try again.'
+      });
+    }))();
+    
+    console.error('Sign-up error:', error);
   };
 
   return (
