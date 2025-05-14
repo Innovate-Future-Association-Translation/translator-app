@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface ErrorContextType {
   errorMessage: string | null;
@@ -22,7 +22,7 @@ export const ErrorProvider = ({ children }: { children: ReactNode }) => {
 export const useErrorContext = (): ErrorContextType => {
   const context = useContext(ErrorContext);
   if (!context) {
-    throw new Error("useErrorContext must be used within a ErrorProvider");
+    throw new Error('useErrorContext must be used within a ErrorProvider');
   }
   return context;
 };
