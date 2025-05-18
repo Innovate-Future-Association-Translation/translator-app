@@ -10,7 +10,6 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-RUN npm install asios
 
 # Copy code files
 COPY . .
