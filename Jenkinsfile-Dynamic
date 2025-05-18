@@ -1,0 +1,128 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs 'Node.js'
+    }
+
+    environment {
+        AWS_DEFAULT_REGION = 'ap-southeast-2'
+     
+    }
+
+    stages {
+    stage('Inject Secrets') {
+        steps {
+            withCredentials([
+                string(credentialsId: 'ifa-aws-account-id', variable: 'AWS_ACCOUNT_ID'),
+                string(credentialsId: 'ifa-image-repo-name', variable: 'IMAGE_REPO_NAME'),
+                string(credentialsId: 'ifa-cluster-name', variable: 'CLUSTER_NAME'),
+                string(credentialsId: 'ifa-service-name', variable: 'SERVICE_NAME'),
+                string(credentialsId: 'ifa-taskdef-name', variable: 'TASK_DEF_NAME'),
+                string(credentialsId: 'ifa-log-group-name', variable: 'LOG_GROUP_NAME'),
+            ]) {
+                echo "Loaded environment variables from credentials"
+                }
+            }
+        }
+
+    
+
+    
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout Code') {
+            steps {
+                //checkout scm
+                git branch: 'devops-david', url: 'https://github.com/Innovate-Future-Association-Translation/translator-app.git'
+            }
+        }
+
+        stage('Configure AWS CLI') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'ifa-aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    sh '''
+                        aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+                        aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+                        aws configure set default.region $AWS_DEFAULT_REGION
+                        aws configure set output json
+                    '''
+                }
+            }
+        }
+
+        stage('Build & Push Docker Image') {
+            steps {
+                script {
+                    def shortCommit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    env.IMAGE_TAG = shortCommit
+
+                    withCredentials([usernamePassword(credentialsId: 'ifa-aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        sh """
+                            aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
+                            docker build -t translator-app .
+                            docker tag translator-app:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:latest
+                            docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:latest
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to ECS') {
+            steps {
+                script {
+                    withCredentials([
+                        file(credentialsId: 'ifa-frontend-env-file', variable: 'ENV_FILE'),
+                        usernamePassword(credentialsId: 'ifa-aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')
+                    ]) {
+                        def envVars = readFile(ENV_FILE).split("\n").findAll { it.trim() && !it.startsWith("#") }.collectEntries {
+                            def (key, value) = it.split("=", 2)
+                            [(key.trim()): value.trim()]
+                        }
+
+                        def containerEnv = envVars.collect { key, value -> [name: key, value: value] }
+
+                        def taskDef = [
+                            family: TASK_DEF_NAME,
+                            networkMode: "awsvpc",
+                            requiresCompatibilities: ["FARGATE"],
+                            cpu: "1024",
+                            memory: "3072",
+                            executionRoleArn: "arn:aws:iam::${AWS_ACCOUNT_ID}:role/ifa-frontend-ecs-task-execution-role",
+                            containerDefinitions: [[
+                                name: IMAGE_REPO_NAME,
+                                image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:latest",
+                                essential: true,
+                                portMappings: [[ containerPort: 3000, hostPort: 3000, protocol: "tcp"]],
+                                memory: 3072,
+                                environment: containerEnv,
+                                logConfiguration: [
+                                    logDriver: 'awslogs',
+                                    options: [
+                                        'awslogs-group': LOG_GROUP_NAME,
+                                        'awslogs-region': AWS_DEFAULT_REGION,
+                                        'awslogs-stream-prefix': 'ecs'
+                                    ]
+                                ]
+                            ]]
+                        ]
+
+                        writeJSON file: 'taskdef.json', json: taskDef, pretty: 4
+
+                        sh """
+                            aws logs create-log-group --log-group-name ${LOG_GROUP_NAME} --region ${AWS_DEFAULT_REGION} || true
+                            aws logs put-retention-policy --log-group-name ${LOG_GROUP_NAME} --retention-in-days 1 --region ${AWS_DEFAULT_REGION} || true
+                            aws ecs register-task-definition --cli-input-json file://taskdef.json
+                            aws ecs update-service --cluster ${CLUSTER_NAME} --service ${SERVICE_NAME} --task-definition ${TASK_DEF_NAME} --force-new-deployment
+                        """
+                    }
+                }
+            }
+        }
+    }
+}
