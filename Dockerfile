@@ -10,6 +10,8 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+RUN npm install asios
+
 # Copy code files
 COPY . .
 
@@ -17,8 +19,8 @@ COPY . .
 EXPOSE 3000
 
 # Start the app
-CMD ["npm", "run", "dev"]
-# CMD ["npx", "next", "dev", "-H", "0.0.0.0", "-p", "3000"]
+# CMD ["npm", "run", "dev"]
+CMD ["npx", "next", "dev", "-H", "0.0.0.0", "-p", "3000"]
 
 
 
