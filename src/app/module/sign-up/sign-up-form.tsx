@@ -36,6 +36,7 @@ export const SignUpForm = () => {
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     mode: "onSubmit",
+>>>>>>> dev
     defaultValues: {
       name: '',
       email: '',
@@ -56,7 +57,6 @@ export const SignUpForm = () => {
   const onSubmit = async (data: SignupFormData) => {
     setIsSubmitting(true);
     setServerError(null);
-    
     try {
       await axios.post(`${API_BASE_URL}/users/register`, {
         name: data.name,
@@ -84,10 +84,10 @@ export const SignUpForm = () => {
     }
 
     const status = error.response?.status;
-    const errorData = error.response?.data;
-    
     if (status === 409) {
-      setServerError('This email is already registered. Please use another email or sign in directly.');
+      setServerError(
+        'This email is already registered. Please use another email or sign in directly.'
+      );
     } else if (status === 406) {
       setServerError('Invalid input format. Please check all fields.');
     } else if (status === 500) {
@@ -95,7 +95,6 @@ export const SignUpForm = () => {
     } else {
       setServerError('Registration failed. Please check your network or contact our technical support');
     }
-    
     console.error('Sign-up error:', error);
   };
 
