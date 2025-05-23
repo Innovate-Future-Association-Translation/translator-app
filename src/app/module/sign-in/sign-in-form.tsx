@@ -20,13 +20,11 @@ import { API_BASE_URL } from '@/lib/api';
 export const SignInForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  
   // react-hook-form configuration
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setError,
   } = useForm<SigninFormData>({
     resolver: zodResolver(signinSchema),
     defaultValues: {
@@ -43,7 +41,6 @@ export const SignInForm = () => {
   const onSubmit = async (data: SigninFormData) => {
     setIsSubmitting(true);
     setServerError(null);
-    
     try {
       const response = await axios.post(`${API_BASE_URL}/users/login`, {
         email: data.email,
@@ -64,15 +61,16 @@ export const SignInForm = () => {
     }
   };
 
-  const handleLoginError = (error: any) => {
+  const handleLoginError = (error: unknown) => {
     if (!axios.isAxiosError(error)) {
-      setServerError('An unknown error occurred. Please check your network or contact our technical support');
+      setServerError(
+        'An unknown error occurred. Please check your network or contact our technical support'
+      );
       return;
     }
 
     const status = error.response?.status;
     const errorMessage = error.response?.data?.message || '';
-    
     if (status === 401) {
       if (errorMessage.includes('email is not verified')) {
         setServerError('Email is not verified. Please check your inbox to complete verification.');
