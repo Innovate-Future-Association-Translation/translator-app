@@ -8,7 +8,6 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Providers } from './providers';
 import { ErrorProvider } from '@/context/errorContext';
-import { UserProvider } from '@/context/userContext';
 import './globals.css';
 
 // Define Geist Sans font
@@ -45,9 +44,7 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
         <Providers>
-          <ErrorProvider>
-            <UserProvider>{children}</UserProvider>
-          </ErrorProvider>
+          <ErrorProvider>{children}</ErrorProvider>
         </Providers>
       </body>
     </html>
