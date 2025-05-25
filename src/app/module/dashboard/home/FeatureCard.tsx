@@ -1,18 +1,16 @@
 'use client';
 import React from 'react';
 import { Box, Button, Text, Image, useMediaQuery } from '@chakra-ui/react';
-import { useRouter } from 'next/navigation';
 interface FeatureCardProps {
   title: string;
   buttonText: string;
   bgColor: string;
-  to: string;
+  onClickApi?: () => void | Promise<void>;
 }
-export const FeatureCard = ({ title, buttonText, bgColor, to }: FeatureCardProps) => {
+export const FeatureCard = ({ title, buttonText, bgColor, onClickApi }: FeatureCardProps) => {
   const isFirstCard = bgColor === '#046ffb';
   const isSecondCard = bgColor === '#dad9fb';
   const isThirdOrFourthCard = bgColor === '#ead9fb' || bgColor === '#dafca3';
-  const router = useRouter();
   const [isWideScreen] = useMediaQuery(['(min-width: 1355px)']);
   return (
     <Box
@@ -69,7 +67,7 @@ export const FeatureCard = ({ title, buttonText, bgColor, to }: FeatureCardProps
         {title}
       </Text>
       <Button
-        onClick={() => router.push(to)}
+        onClick={onClickApi}
         position="absolute"
         bottom="40px"
         w="140px"

@@ -53,6 +53,7 @@ const Feature = ({ title, text, bgColor, icon }: FeatureProps) => {
           h={{ base: '1.5vh', md: '1.5vh' }}
           minW="16px"
           minH="16px"
+          alt="landing-page-icon"
         />
       </Box>
     </Stack>
