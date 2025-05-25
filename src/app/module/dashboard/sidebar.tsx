@@ -11,6 +11,14 @@ interface NavItemProps {
   to: string;
 }
 
+const navItems = [
+  { label: 'Home', imageSrc: '/home.png', to: '/dashboard' },
+  { label: 'Scan', imageSrc: '/scan.png', to: '/scan' },
+  { label: 'Link', imageSrc: '/link.png', to: '/link-meeting' },
+  { label: 'Toolbox', imageSrc: '/toolbox.png', to: '/toolbox' },
+  { label: 'Profile', imageSrc: '/profile.png', to: '/profile' },
+];
+
 const NavItem = ({ label, imageSrc, isActive, to }: NavItemProps) => {
   const router = useRouter();
   const handleClick = () => {
@@ -46,13 +54,6 @@ const NavItem = ({ label, imageSrc, isActive, to }: NavItemProps) => {
 
 const Sidebar = () => {
   const currentPath = usePathname();
-  const navItems = [
-    { label: 'Home', imageSrc: '/home.png', to: '/dashboard' },
-    { label: 'Scan', imageSrc: '/scan.png', to: '/scan' },
-    { label: 'Link', imageSrc: '/link.png', to: '/link' },
-    { label: 'Toolbox', imageSrc: '/toolbox.png', to: '/toolbox' },
-    { label: 'Profile', imageSrc: '/profile.png', to: '/profile' },
-  ];
 
   return (
     <Box
@@ -61,6 +62,7 @@ const Sidebar = () => {
       bgImage={'linear-gradient(to bottom, #eaf0ff, #dbdaff);'}
       borderRight="1px"
       borderColor="#E5E9F2"
+      display={{ base: 'none', md: 'block' }}
     >
       <Flex justify="center" pt="20px" mb="48px">
         <Box
@@ -72,7 +74,7 @@ const Sidebar = () => {
           alignItems="center"
           justifyContent="center"
         >
-          <Image src="/logo.png"></Image>
+          <Image src="/logo.png" alt="brand-logo"></Image>
         </Box>
       </Flex>
       <Flex direction="column" align="center" gap="16px">

@@ -1,9 +1,15 @@
+'use client';
 import React from 'react';
 import { Box, Text, Button, Flex, Image, useMediaQuery } from '@chakra-ui/react';
+import { createInstantMeeting } from '@/lib/api';
 import { useUser } from '../../../../context/userContext';
 import Footer from '../footer';
+import { useMeetingContext } from '@/context/meetingContext';
+import { useRouter } from 'next/navigation';
 export default function MobileHomePage() {
   const { user } = useUser();
+  const { setMeeting } = useMeetingContext();
+  const router = useRouter();
   const [isHighScreen] = useMediaQuery(['(min-height: 800px)'], { ssr: false });
   let proHeight = '140px';
   let startHeight = '104px';
@@ -11,8 +17,26 @@ export default function MobileHomePage() {
     proHeight = '210px';
     startHeight = '150px';
   }
+
+  const handleCreateMeeting = async () => {
+    if (!user) return;
+    try {
+      const data = await createInstantMeeting(user.id);
+      if (data.redirectMeetingRoomUrl) {
+        console.log(data);
+        setMeeting({
+          roomId: data.roomId,
+          meetingURL: data.redirectMeetingRoomUrl,
+        });
+        router.push(data.redirectMeetingRoomUrl);
+      }
+    } catch (error) {
+      console.error('Failed to create meeting:', error);
+      alert('Failed to start meeting.');
+    }
+  };
   return (
-    <div>
+    <Box>
       <Box p="48px 20px" bgColor={'rgba(255, 255, 255, 0.04)'} position={'relative'}>
         <Box fontSize="36px" fontWeight="bold">
           <Flex justify="space-between" align={'center'}>
@@ -30,6 +54,8 @@ export default function MobileHomePage() {
             h={startHeight}
             borderRadius={'20px'}
             flexDirection={'column'}
+            as="button"
+            onClick={handleCreateMeeting}
           >
             <Text
               fontSize={'16px'}
@@ -172,6 +198,6 @@ export default function MobileHomePage() {
         </Box>
         <Footer></Footer>
       </Box>
-    </div>
+    </Box>
   );
 }
