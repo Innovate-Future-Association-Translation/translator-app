@@ -15,10 +15,15 @@ import { signinSchema, SigninFormData } from '@/app/validation/signin';
 import { InputField } from '@/app/module/common/input-field';
 import { PasswordInput } from '@/app/module/common/password-input';
 import { API_BASE_URL } from '@/lib/api';
+import { ForgotPasswordModal } from './components/forgot-password-modal';
+import { useBreakpointValue } from '@chakra-ui/react';
+import { useRouter } from 'next/navigation';
 
 // Sign in form component
 export const SignInForm = () => {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   // react-hook-form configuration
   const {
@@ -33,6 +38,8 @@ export const SignInForm = () => {
     },
   });
 
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  
   const handleGoogleOauth = () => {
     window.location.href = `${API_BASE_URL}/users/googleAuth`;
     console.log('Initiating Google Sign-In...');
@@ -94,13 +101,13 @@ export const SignInForm = () => {
       </Text>
 
       {serverError && (
-        <Box 
-          w="full" 
-          p={3} 
-          bg="red.50" 
-          color="red.600" 
-          borderRadius="md" 
-          borderWidth="1px" 
+        <Box
+          w="full"
+          p={3}
+          bg="red.50"
+          color="red.600"
+          borderRadius="md"
+          borderWidth="1px"
           borderColor="red.200"
           mb={4}
         >
@@ -126,9 +133,23 @@ export const SignInForm = () => {
             isRequired
           />
           <Flex justify="flex-end" mt={-2} mb={2}>
-            <Link href="/forgot-password" color="blue.500" fontSize="sm" fontWeight="medium">
-              Forgot Password?
-            </Link>
+            <Flex justify="flex-end" mt={-2} mb={2}>
+              <Text
+                color="blue.500"
+                fontSize="sm"
+                fontWeight="medium"
+                cursor="pointer"
+                onClick={() => {
+                  if (isMobile) {
+                    router.push('/forgot-password');
+                  } else {
+                    setIsModalOpen(true);
+                  }
+                }}
+              >
+                Forgot Password?
+              </Text>
+            </Flex>
           </Flex>
           <Button
             mt={4}
@@ -173,6 +194,7 @@ export const SignInForm = () => {
         <Text fontWeight="medium">Sign in with Google</Text>
       </Button>
       <Flex pt={6}>
+      <ForgotPasswordModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         <Text color="gray.600" mr={1}>
           Don&apos;t have an account?
         </Text>
