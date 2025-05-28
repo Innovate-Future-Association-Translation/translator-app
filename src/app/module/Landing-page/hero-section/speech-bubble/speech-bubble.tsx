@@ -29,7 +29,13 @@ const AvatarWithSpeechBubble = ({
 }: AvatarWithSpeechBubbleProps) => {
   return (
     <VStack position="relative" left={left} bottom={bottom} top={top}>
-      <Image width={img_width} height={img_height} borderRadius="3xl" src={imageSrc} />
+      <Image
+        width={img_width}
+        height={img_height}
+        borderRadius="3xl"
+        src={imageSrc}
+        alt="hero-section-user-image"
+      />
       <Box
         position="absolute"
         top={bubble_top}

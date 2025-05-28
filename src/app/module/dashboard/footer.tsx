@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { Flex, Button, Image, Text, useMediaQuery } from '@chakra-ui/react';
 import { useRouter, usePathname } from 'next/navigation';

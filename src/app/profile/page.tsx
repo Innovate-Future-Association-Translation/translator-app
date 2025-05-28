@@ -1,26 +1,19 @@
 'use client';
-import { useUser } from '@/context/userContext';
 import Sidebar from '../module/dashboard/sidebar';
-import Footer from '../module/dashboard/footer';
-import { Box, Flex } from '@chakra-ui/react';
-const ProfilePage = () => {
-  const { user } = useUser();
+import { Box, Flex, Text } from '@chakra-ui/react';
+const Profile = () => {
   return (
-    <div>
+    <Box>
       <Flex
         display={{ base: 'none', md: 'flex' }}
         bgImage="url('/dashboard-bg.png')"
         bgSize="cover"
       >
         <Sidebar />
-        <div>This is ProfilePage welcome {user ? user.name : 'Guest'}</div>
+        <Text>Profile</Text>
       </Flex>
-      <Box display={{ base: 'block', md: 'none' }} px="20px">
-        <div>This is ProfilePage welcome {user ? user.name : 'Guest'}</div>
-        <Footer></Footer>
-      </Box>
-    </div>
+    </Box>
   );
 };
 
-export default ProfilePage;
+export default Profile;
