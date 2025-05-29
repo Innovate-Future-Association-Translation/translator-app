@@ -10,9 +10,7 @@
 
 import { ChakraProvider, createSystem, defaultConfig } from '@chakra-ui/react';
 import React from 'react';
-import { UserProvider } from '@/context/userContext';
-import { MeetingProvider } from '@/context/meetingContext';
-import { ErrorProvider } from '@/context/errorContext';
+
 // Create custom system
 const system = createSystem(defaultConfig);
 
@@ -24,13 +22,5 @@ const system = createSystem(defaultConfig);
  * @returns Component containing Chakra provider
  */
 export function Providers({ children }: { children: React.ReactNode }) {
-  return (
-    <ChakraProvider value={system}>
-      <ErrorProvider>
-        <UserProvider>
-          <MeetingProvider>{children}</MeetingProvider>
-        </UserProvider>
-      </ErrorProvider>
-    </ChakraProvider>
-  );
+  return <ChakraProvider value={system}>{children}</ChakraProvider>;
 }
