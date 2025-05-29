@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
 import { Box, Button, Flex, Text, Image, useMediaQuery } from '@chakra-ui/react';
-import { useUser } from '@/context/userContext';
+import { useUserStore } from '@/store/userStore';
 import { FeatureCard } from '@/app/module/dashboard/home/FeatureCard';
 import { createInstantMeeting } from '@/lib/api';
-import { useMeetingContext } from '@/context/meetingContext';
+import { useMeetingStore } from '@/store/meetingStore';
 import { useRouter } from 'next/navigation';
 
 const features = [
@@ -15,10 +15,10 @@ const features = [
 ];
 
 export default function DesktopHomePage() {
-  const { user } = useUser();
+  const user = useUserStore((state) => state.user);
   const router = useRouter();
   const [isWideScreen] = useMediaQuery(['(min-width: 1355px)']);
-  const { setMeeting } = useMeetingContext();
+  const setMeeting = useMeetingStore((state) => state.setMeeting);
   let proWidth = 'calc(100% - 32px)';
   if (!isWideScreen) {
     proWidth = '600px';
@@ -29,7 +29,6 @@ export default function DesktopHomePage() {
     try {
       const data = await createInstantMeeting(user.id);
       if (data.redirectMeetingRoomUrl) {
-        console.log(data);
         setMeeting({
           roomId: data.roomId,
           meetingURL: data.redirectMeetingRoomUrl,

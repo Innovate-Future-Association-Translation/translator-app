@@ -2,22 +2,37 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUser } from '@/context/userContext';
-import { useMeetingContext } from '@/context/meetingContext';
+import { useUserStore } from '@/store/userStore';
+import { useMeetingStore } from '@/store/meetingStore';
 import { Box, Button, Input, Text } from '@chakra-ui/react';
 
 function JoinRoomPage() {
   const router = useRouter();
-  const { user } = useUser();
-  const { setMeeting } = useMeetingContext();
+  const user = useUserStore((state) => state.user);
+  const setMeeting = useMeetingStore((state) => state.setMeeting);
 
   const [meetingURL, setMeetingURL] = useState('');
 
   const handleJoinRoom = () => {
     const trimmedURL = meetingURL.trim();
     if (!user || !trimmedURL) return;
-    const parts = trimmedURL.split('/');
-    const roomId = parts[parts.length - 1];
+    let roomId = '';
+    try {
+      const url = new URL(trimmedURL);
+      const pathname = url.pathname;
+      const match = pathname.match(/\/instant-meeting-room\/([^\/]+)/);
+      if (match) {
+        roomId = match[1];
+      }
+    } catch {
+      const match = trimmedURL.match(/\/instant-meeting-room\/([^\/]+)/);
+      if (match) {
+        roomId = match[1];
+      } else {
+        const parts = trimmedURL.split('/');
+        roomId = parts[parts.length - 1];
+      }
+    }
 
     if (!roomId) return;
 
@@ -26,7 +41,7 @@ function JoinRoomPage() {
       meetingURL: trimmedURL,
     });
 
-    router.push(trimmedURL);
+    router.push(`/instant-meeting-room/${roomId}`);
   };
 
   return (

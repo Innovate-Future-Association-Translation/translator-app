@@ -1,7 +1,7 @@
 'use client';
-import Sidebar from '../module/dashboard/sidebar';
+import Sidebar from '../../module/dashboard/sidebar'; // Adjusted path
 import { Box, Flex, Text } from '@chakra-ui/react';
-const ToolBoxPage = () => {
+const Profile = () => {
   return (
     <Box>
       <Flex
@@ -10,10 +10,10 @@ const ToolBoxPage = () => {
         bgSize="cover"
       >
         <Sidebar />
-        <Text>ToolBox</Text>
+        <Text>Profile</Text>
       </Flex>
     </Box>
   );
 };
 
-export default ToolBoxPage;
+export default Profile;

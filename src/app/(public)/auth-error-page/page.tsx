@@ -1,11 +1,11 @@
 'use client';
 
-import { useErrorContext } from '@/context/errorContext';
+import { useErrorStore } from '@/store/errorStore';
 import { useRouter } from 'next/navigation';
 import AuthFailHandler from '@/app/module/auth-fail-handler/handle-auth-fail';
 
 function AuthErrorPage() {
-  const { errorMessage } = useErrorContext();
+  const errorMessage = useErrorStore((state) => state.errorMessage);
   const router = useRouter();
   const switchToSignUp = () => {
     router.push('/signup');

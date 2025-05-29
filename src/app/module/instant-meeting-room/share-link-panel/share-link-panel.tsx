@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Button, Image, Flex, Text } from '@chakra-ui/react';
 import AddUserButton from '../../common/add-user-button';
-import { useMeetingContext } from '@/context/meetingContext';
+import { useMeetingStore } from '@/store/meetingStore';
 import QRCodeGenerator from './qrCodeGenerator';
 import URLClipboard from './url-clipboard';
 
@@ -10,13 +10,7 @@ interface shareLinkPanelProps {
 }
 
 function ShareLinkPanel({ closeThePanel }: shareLinkPanelProps) {
-  const { meeting } = useMeetingContext();
-  const [copyMessage, setCopyMessage] = useState('');
-  const handleCopy = () => {
-    setCopyMessage('URL copied successfully!');
-    console.log(copyMessage);
-    setTimeout(() => setCopyMessage(''), 2000);
-  };
+  const meeting = useMeetingStore((state) => state.meeting);
 
   const meetingURL = meeting?.meetingURL;
   return (
@@ -54,7 +48,7 @@ function ShareLinkPanel({ closeThePanel }: shareLinkPanelProps) {
       </Flex>
       <AddUserButton backgroundColor="#046ffb" information="Add others" />
       <Text fontSize="14px">Or scan the QR code to join the meeting</Text>
-      {meetingURL && <QRCodeGenerator url={meetingURL} />}
+      {meeting?.roomId && <QRCodeGenerator roomId={meeting.roomId} />}
       <Text fontSize="14px">Or share this meeting link with others you want in the meeting</Text>
       <Box
         bgColor="#E5F0FE"
@@ -65,7 +59,7 @@ function ShareLinkPanel({ closeThePanel }: shareLinkPanelProps) {
         justifyContent="center"
         alignItems="center"
       >
-        {meetingURL && <URLClipboard handleCopy={handleCopy} url={meetingURL} />}
+        {meetingURL && <URLClipboard url={meetingURL} />}
       </Box>
     </Box>
   );
