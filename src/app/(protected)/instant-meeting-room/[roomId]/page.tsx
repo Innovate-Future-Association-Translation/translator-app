@@ -26,15 +26,18 @@ const Room = ({ params: paramsPromise }: { params: Promise<{ roomId: string }> }
 
   return (
     <>
-      <Flex minH="100vh" flexDirection="row">
+      <Flex minH="100vh" flexDirection="row" w="100%" maxW="100vw" overflow="hidden">
         <Box width="88px" bg="white" boxShadow="md" display={{ base: 'none', md: 'block' }}>
           <Sidebar />
         </Box>
         <Box
           flex="1"
-          p={6}
+          p={{ base: '16px', md: 6 }}
           bgImage={{ base: 'none', md: "url('/dashboard/dashboard-background-img-small.png')" }}
           bgSize="cover"
+          w="100%"
+          maxW="100%"
+          overflow="hidden"
         >
           <MeetingRoom />
         </Box>

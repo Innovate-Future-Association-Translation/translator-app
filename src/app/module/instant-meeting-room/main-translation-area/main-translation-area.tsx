@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import ParticipantList from './participant-list/participants-list';
 import ChatBubble from './chat-bubble/chat-bubble';
 import RecognizingBubble from './chat-bubble/user-recognizing-bubble';
@@ -14,8 +14,19 @@ interface userStatus {
   recognizingText?: string | null;
 }
 
+interface MessageWithTranslation {
+  id: string;
+  originalText: string;
+  userName: string;
+  timestamp: Date;
+  translatedText?: string;
+  targetLanguage?: string;
+}
+
 interface speechData {
-  userNameList: string[];
+  messagesWithTranslations?: MessageWithTranslation[];
+  isRetranslating?: boolean;
+  userNameList?: string[];
   recognizingText?: string | null;
   beforeTranslationMessageList?: string[];
   afterTranslation?: string[];
@@ -26,9 +37,11 @@ interface speechData {
 
 function MainTranslationArea(speechData: speechData) {
   const {
+    messagesWithTranslations = [],
+    isRetranslating = false,
     beforeTranslationMessageList = [],
     afterTranslation = [],
-    userNameList,
+    userNameList = [],
     usersStatusList,
   } = speechData;
   const [messages, setMessages] = useState<string[]>([]);
@@ -44,7 +57,6 @@ function MainTranslationArea(speechData: speechData) {
   useEffect(() => {
     if (afterTranslation.length > 0) {
       const newTranslatedMessages = [...afterTranslation];
-
       setTranslatedMessage(newTranslatedMessages);
     }
   }, [afterTranslation]);
@@ -52,12 +64,14 @@ function MainTranslationArea(speechData: speechData) {
   return (
     <Box
       bgColor="white"
-      w={{ base: '100vw', md: '85vw' }}
+      w={{ base: '100%', md: '85vw' }}
       h={{ base: '74vh', md: '74vh' }}
       borderRadius="20px"
       display="flex"
       flexDir={{ base: 'column-reverse', md: 'row' }}
       pt={{ base: '20px', md: '30px' }}
+      maxW={{ base: 'calc(100vw - 32px)', md: '85vw' }}
+      mx={{ base: 'auto', md: 'initial' }}
     >
       <Box
         w={{ base: '100%', md: '83%' }}
@@ -68,14 +82,30 @@ function MainTranslationArea(speechData: speechData) {
         borderBottomLeftRadius="20px"
         overflowY="auto"
       >
-        {messages.map((message, index) => (
-          <ChatBubble
-            key={index}
-            beforeTranslationMessage={message}
-            userName={userNameList[index]}
-            afterTranslation={translatedMessage[index]}
-          />
-        ))}
+        {isRetranslating && (
+          <Box textAlign="center" py={2} bg="blue.50" borderRadius="8px" mb={4}>
+            <Text fontSize="sm" color="blue.600">
+              Retranslating historical messages...
+            </Text>
+          </Box>
+        )}
+        {messagesWithTranslations.length > 0
+          ? messagesWithTranslations.map((message) => (
+              <ChatBubble
+                key={message.id}
+                beforeTranslationMessage={message.originalText}
+                userName={message.userName}
+                afterTranslation={message.translatedText}
+              />
+            ))
+          : messages.map((message, index) => (
+              <ChatBubble
+                key={index}
+                beforeTranslationMessage={message}
+                userName={userNameList[index]}
+                afterTranslation={translatedMessage[index]}
+              />
+            ))}
         {usersStatusList?.map((user) =>
           user.isRecognizing && !!user.recognizingText?.trim() ? (
             <RecognizingBubble
