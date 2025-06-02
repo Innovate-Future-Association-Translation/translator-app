@@ -2,17 +2,16 @@
 import React from 'react';
 import { Flex, Button, Image, Text, useMediaQuery } from '@chakra-ui/react';
 import { useRouter, usePathname } from 'next/navigation';
+import LogoutButton from '../common/logout-button';
 
 interface NavItemProps {
   label: string;
   imageSrc: string;
   isActive: boolean;
   to: string;
-  isFirst: boolean;
-  isLast: boolean;
 }
 
-const NavItem = ({ label, imageSrc, isActive, to, isFirst, isLast }: NavItemProps) => {
+const NavItem = ({ label, imageSrc, isActive, to }: NavItemProps) => {
   const router = useRouter();
   const handleClick = () => {
     router.push(to);
@@ -25,8 +24,6 @@ const NavItem = ({ label, imageSrc, isActive, to, isFirst, isLast }: NavItemProp
       color="white"
       bg={isActive ? '#25292c' : 'transparent'}
       borderRadius={isActive ? '20px' : '0'}
-      ml={isFirst && !isActive ? '20px' : '0px'}
-      mr={isLast && !isActive ? '20px' : '0px'}
     >
       <Image
         src={imageSrc}
@@ -49,12 +46,12 @@ const NavItem = ({ label, imageSrc, isActive, to, isFirst, isLast }: NavItemProp
 const Footer: React.FC = () => {
   const currentPath = usePathname();
   const [isHighScreen] = useMediaQuery(['(min-height: 800px)'], { ssr: false });
-  const navItems = [
-    { label: 'Home', imageSrc: '/home.png', to: '/dashboard', isFirst: true },
+  const navItems: Array<Omit<NavItemProps, 'isActive'>> = [
+    { label: 'Home', imageSrc: '/home.png', to: '/dashboard' },
     { label: 'Scan', imageSrc: '/scan.png', to: '/scan' },
     { label: 'Link', imageSrc: '/link.png', to: '/link' },
     { label: 'Toolbox', imageSrc: '/toolbox.png', to: '/toolbox' },
-    { label: 'Profile', imageSrc: '/profile.png', to: '/profile', isLast: true },
+    { label: 'Profile', imageSrc: '/profile.png', to: '/profile' },
   ];
 
   return (
@@ -62,11 +59,13 @@ const Footer: React.FC = () => {
       w={isHighScreen ? 'calc(100% - 40px);' : '100%'}
       borderRadius="25px"
       h="40px"
-      justifyContent="space-between"
+      justifyContent="space-around"
+      alignItems="center"
       boxShadow="0 0 12px 0 rgba(0, 0, 0, 0.08)"
       bg="white"
       position={isHighScreen ? 'fixed' : 'relative'}
       bottom={isHighScreen ? '20px' : 'none'}
+      px="10px"
     >
       {navItems.map((item) => (
         <NavItem
@@ -75,10 +74,9 @@ const Footer: React.FC = () => {
           imageSrc={item.imageSrc}
           isActive={currentPath.startsWith(item.to)}
           to={item.to}
-          isFirst={item.isFirst ? item.isFirst : false}
-          isLast={item.isLast ? item.isLast : false}
         />
       ))}
+      <LogoutButton imageSrc="/logout.svg" size="sm" showLabel={false} />
     </Flex>
   );
 };

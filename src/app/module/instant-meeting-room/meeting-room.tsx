@@ -242,10 +242,18 @@ function MeetingRoom() {
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
-        gap="2vw"
+        gap={{ base: '16px', md: '2vw' }}
         position="relative"
+        w="100%"
+        maxW="100vw"
+        overflow="hidden"
       >
-        <Box w="100%" px="2vw" display={{ base: 'none', md: 'flex' }} justifyContent="flex-start">
+        <Box
+          w="100%"
+          px={{ base: '16px', md: '2vw' }}
+          display={{ base: 'none', md: 'flex' }}
+          justifyContent="flex-start"
+        >
           <DeskTopHeading />
         </Box>
         <Box
@@ -254,6 +262,7 @@ function MeetingRoom() {
           justifyContent="space-between"
           alignItems="center"
           mt="15px"
+          px="16px"
         >
           <MobileHeading />
         </Box>

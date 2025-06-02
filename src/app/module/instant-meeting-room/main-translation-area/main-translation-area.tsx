@@ -52,12 +52,14 @@ function MainTranslationArea(speechData: speechData) {
   return (
     <Box
       bgColor="white"
-      w={{ base: '100vw', md: '85vw' }}
+      w={{ base: '100%', md: '85vw' }}
       h={{ base: '74vh', md: '74vh' }}
       borderRadius="20px"
       display="flex"
       flexDir={{ base: 'column-reverse', md: 'row' }}
       pt={{ base: '20px', md: '30px' }}
+      maxW={{ base: 'calc(100vw - 32px)', md: '85vw' }}
+      mx={{ base: 'auto', md: 'initial' }}
     >
       <Box
         w={{ base: '100%', md: '83%' }}

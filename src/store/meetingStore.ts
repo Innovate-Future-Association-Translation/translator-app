@@ -7,7 +7,7 @@ interface Meeting {
 
 export interface MeetingState {
   meeting: Meeting | undefined;
-  setMeeting: (meeting: Meeting) => void;
+  setMeeting: (meeting: Meeting | undefined) => void;
 }
 
 export const useMeetingStore = create<MeetingState>((set) => ({
