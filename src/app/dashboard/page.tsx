@@ -1,35 +1,25 @@
 'use client';
+import React from 'react';
+import { Box } from '@chakra-ui/react';
+import DesktopHomePage from '@/app/module/dashboard/home/desktopHomePage';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import UserProfile from '../module/dashboard/user-profile';
-import LogoutUser from '../module/dashboard/logout-user';
-import LoadingUser from '../module/dashboard/loading-user';
+import { useUser } from '@/context/userContext';
 import { getUserProfile } from '@/lib/api';
+import Sidebar from '../module/dashboard/sidebar';
+import dynamic from 'next/dynamic';
+const MobileHomePage = dynamic(() => import('../module/dashboard/home/mobileHomePage'), {
+  ssr: false,
+});
 
-interface User {
-  name: string;
-  email: string;
-  language: string;
-  mobile: string;
-  selfDescription: string;
-}
-
-export default function Dashboard() {
+export default function HomePage() {
   const router = useRouter();
+  const { user, setUser } = useUser();
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const handleLogout = () => {
-    setLoading(true);
-    localStorage.removeItem('IFA_AuthToken');
-    router.push('/signup');
-  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const tokenFromURL = urlParams.get('token');
-
     if (tokenFromURL) {
       localStorage.setItem('IFA_AuthToken', tokenFromURL);
       setToken(tokenFromURL);
@@ -45,42 +35,37 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    if (token) {
+    if (token && !user) {
       const fetchUserData = async () => {
         try {
           const response = await getUserProfile(token);
-          if (!response.ok) {
-            throw new Error('Failed to fetch user data');
-          }
+          if (!response.ok) throw new Error('Failed to fetch user data');
           const data = await response.json();
           setUser(data);
-          setLoading(false);
         } catch (err) {
-          setLoading(false); // Just set loading to false if there's an error
-          throw err;
+          console.error(err);
         }
       };
-
       fetchUserData();
     }
-  }, [token]);
-
-  if (loading) {
-    return <LoadingUser />;
-  }
-
-  if (!user) {
-    return <LogoutUser />;
-  }
-
+  }, [token, user, setUser]);
   return (
-    <UserProfile
-      name={user.name}
-      email={user.email}
-      language={user.language}
-      mobile={user.mobile}
-      selfDescription={user.selfDescription}
-      handleLogout={handleLogout}
-    />
+    <>
+      <Box
+        display={{ base: 'none', md: 'flex' }}
+        gap="60px"
+        flexDir="row"
+        bgImage={{ base: 'none', md: "url('/dashboard/dashboard-background-img-small.png')" }}
+        bgSize="cover"
+      >
+        <Sidebar />
+        <Box mt="20px" ml="30px">
+          <DesktopHomePage />
+        </Box>
+      </Box>
+      <Box display={{ base: 'block', md: 'none' }}>
+        <MobileHomePage />
+      </Box>
+    </>
   );
 }

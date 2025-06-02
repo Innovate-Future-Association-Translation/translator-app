@@ -3,14 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FcGoogle } from 'react-icons/fc';
-import { 
-  Box, 
-  Button, 
-  Flex, 
-  Stack, 
-  Text, 
-  Link
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Stack, Text, Link } from '@chakra-ui/react';
 
 import { signupSchema, SignupFormData } from '@/app/validation/signup';
 import { InputField } from '@/app/module/common/input-field';
@@ -32,10 +25,9 @@ export const SignUpForm = () => {
     handleSubmit,
     formState: { errors },
     setValue,
-    setError,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
-    mode: "onSubmit",
+    mode: 'onSubmit',
     defaultValues: {
       name: '',
       email: '',
@@ -56,7 +48,6 @@ export const SignUpForm = () => {
   const onSubmit = async (data: SignupFormData) => {
     setIsSubmitting(true);
     setServerError(null);
-    
     try {
       await axios.post(`${API_BASE_URL}/users/register`, {
         name: data.name,
@@ -84,18 +75,19 @@ export const SignUpForm = () => {
     }
 
     const status = error.response?.status;
-    const errorData = error.response?.data;
-    
     if (status === 409) {
-      setServerError('This email is already registered. Please use another email or sign in directly.');
+      setServerError(
+        'This email is already registered. Please use another email or sign in directly.'
+      );
     } else if (status === 406) {
       setServerError('Invalid input format. Please check all fields.');
     } else if (status === 500) {
       setServerError('Server error. Please try again later.');
     } else {
-      setServerError('Registration failed. Please check your network or contact our technical support');
+      setServerError(
+        'Registration failed. Please check your network or contact our technical support'
+      );
     }
-    
     console.error('Sign-up error:', error);
   };
 
@@ -107,13 +99,13 @@ export const SignUpForm = () => {
       </Text>
 
       {serverError && (
-        <Box 
-          w="full" 
-          p={3} 
-          bg="red.50" 
-          color="red.600" 
-          borderRadius="md" 
-          borderWidth="1px" 
+        <Box
+          w="full"
+          p={3}
+          bg="red.50"
+          color="red.600"
+          borderRadius="md"
+          borderWidth="1px"
           borderColor="red.200"
           mb={4}
         >

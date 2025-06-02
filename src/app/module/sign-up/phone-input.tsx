@@ -22,7 +22,6 @@ export const PhoneInput = ({ setValue, error }: PhoneInputProps) => {
 
   useEffect(() => {
     const fullPhone = `${countryCode}${phoneNumber}`;
-    
     setValue('phone', fullPhone, {
       shouldValidate: false,
       shouldDirty: true,
@@ -135,7 +134,7 @@ export const PhoneInput = ({ setValue, error }: PhoneInputProps) => {
         <Input
           onChange={handlePhoneNumberChange}
           value={phoneNumber}
-          placeholder={"Phone number"}
+          placeholder={'Phone number'}
           fontSize="md"
           color="gray.800"
           _placeholder={{ color: 'gray.400' }}

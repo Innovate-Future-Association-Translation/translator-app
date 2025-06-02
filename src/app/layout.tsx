@@ -3,11 +3,9 @@
  * Root Layout Component
  * Defines the global layout structure and metadata for the application
  */
-
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Providers } from './providers';
-import { ErrorProvider } from '@/context/errorContext';
 import './globals.css';
 
 // Define Geist Sans font
@@ -43,9 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
-        <Providers>
-          <ErrorProvider>{children}</ErrorProvider>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
