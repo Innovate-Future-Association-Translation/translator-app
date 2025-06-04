@@ -32,7 +32,7 @@ function ShareLinkPanel({ closeThePanel }: shareLinkPanelProps) {
     >
       <Flex w="100%" h="10%" justifyContent="space-between" alignItems="center">
         <Text fontWeight="bold" fontSize="md">
-          Your meeting`&lsquo;` ready
+          Your meeting&apos;s ready
         </Text>
         <Button
           onClick={closeThePanel}

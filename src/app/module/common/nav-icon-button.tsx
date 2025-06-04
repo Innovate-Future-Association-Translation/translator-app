@@ -4,10 +4,11 @@ import { Button, Image } from '@chakra-ui/react';
 interface NavIconButtonProps {
   src: string;
   bg: string;
+  alt: string;
   onClick?: () => void;
 }
 
-function NavIconButton({ src, bg, onClick }: NavIconButtonProps) {
+function NavIconButton({ src, bg, alt, onClick }: NavIconButtonProps) {
   return (
     <Button
       borderRadius="50%"
@@ -24,7 +25,7 @@ function NavIconButton({ src, bg, onClick }: NavIconButtonProps) {
       maxW="48px"
       maxH="48px"
     >
-      <Image w="60%" h="60%" objectFit="contain" src={src} />
+      <Image w="60%" h="60%" objectFit="contain" src={src} alt={alt} />
     </Button>
   );
 }

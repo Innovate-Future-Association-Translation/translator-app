@@ -48,21 +48,29 @@ function BottomNavBar({
         <NavIconButton
           src={isListening ? '/navbar-icon/mic.svg' : '/user-list/user-not-speaking.svg'}
           bg={isListening ? '#026FFB' : '#ffffff'}
+          alt={isListening ? 'Stop microphone' : 'Start microphone'}
           onClick={clickMic}
         />
 
-        <NavIconButton src="/navbar-icon/userWithRound.svg" bg="#ffffff" onClick={clickUser} />
+        <NavIconButton
+          src="/navbar-icon/userWithRound.svg"
+          bg="#ffffff"
+          alt="User settings"
+          onClick={clickUser}
+        />
         <NavIconButton
           src="/navbar-icon/ai-translation.svg"
           bg="#ffffff"
+          alt="AI translation language selector"
           onClick={clickAItranslation}
         />
         <NavIconButton
           src="/navbar-icon/raiseHand.svg"
           bg={isRaiseHand ? '#ffa800' : '#ffffff'}
+          alt={isRaiseHand ? 'Lower hand' : 'Raise hand'}
           onClick={clickRaiseHand}
         />
-        <NavIconButton src="/navbar-icon/share.svg" bg="#ffffff" onClick={clickShare} />
+        <NavIconButton src="/navbar-icon/share.svg" bg="#ffffff" alt="Share" onClick={clickShare} />
         <QuitMeetingButton imageSrc="/quit-meeting.svg" />
       </Flex>
 
