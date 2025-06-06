@@ -10,7 +10,7 @@ function RecognizingBubble(speechData: recognizingData) {
   const { userName, recognizingText } = speechData;
 
   return (
-    <Box maxW="90%" ml={{ base: '16px', md: '40px' }} mb={{ base: '12px', md: '15px' }}>
+    <Box maxW="100%" ml={{ base: '0px', md: '40px' }} mb={{ base: '12px', md: '15px' }}>
       <Box display="flex" flexDir="row" gap="8px" color="#25292c">
         <Image
           src="/user-list/default-avatar.svg"

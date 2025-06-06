@@ -13,8 +13,8 @@ function NavIconButton({ src, bg, onClick }: NavIconButtonProps) {
       borderRadius="50%"
       border="solid 1px #ebebeb"
       bgColor={bg}
-      w={{ base: '44px', md: 'max(40px, min(2.8vw, 48px))' }}
-      h={{ base: '44px', md: 'max(40px, min(2.8vw, 48px))' }}
+      w="44px"
+      h="44px"
       p={0}
       _hover={{ bgColor: '#f0f0f0' }}
       onClick={onClick}

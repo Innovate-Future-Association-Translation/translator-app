@@ -34,3 +34,16 @@ export async function getMeetingParticipantInfo(roomId: string) {
   const data = await response.json();
   return data.participants;
 }
+
+export async function getMeetingCreator(roomId: string) {
+  const response = await fetch(`${API_BASE_URL}/meetings/get-meeting-creator`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ roomId: roomId }),
+  });
+
+  const data = await response.json();
+  return data.creator.id;
+}

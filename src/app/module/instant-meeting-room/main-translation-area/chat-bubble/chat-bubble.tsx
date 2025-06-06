@@ -14,7 +14,7 @@ function ChatBubble(speechData: ChatBubbleProps) {
   const { beforeTranslationMessage, afterTranslation, userName } = speechData;
 
   return (
-    <Box maxW="90%" ml={{ base: '16px', md: '40px' }} mb={{ base: '12px', md: '15px' }}>
+    <Box maxW="95%" ml={{ base: '0px', md: '40px' }} mb={{ base: '12px', md: '15px' }}>
       <Box display="flex" flexDir="row" gap="8px" color="#25292c">
         <Image
           src="/user-list/default-avatar.svg"
@@ -32,7 +32,7 @@ function ChatBubble(speechData: ChatBubbleProps) {
         fontSize={{ base: '14px', md: '14px' }}
         ml={{ base: '0', md: '40px' }}
         position="relative"
-        top="-8px"
+        top={{ base: '0px', md: '-8px' }}
         fontFamily="PingFangSC"
         color="#25292c"
         p="2"

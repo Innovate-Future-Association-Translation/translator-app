@@ -20,9 +20,9 @@ function ShareLinkPanel({ closeThePanel }: shareLinkPanelProps) {
       h="396px"
       borderRadius="20px"
       boxShadow="0 0 16px 0 rgba(0, 0, 0, 0.08)"
-      position="absolute"
+      position="fixed"
       bgColor="#fff"
-      top={{ base: '250px', md: '370px' }}
+      bottom={{ base: '20vh', md: '10vh' }}
       display="flex"
       flexDirection="column"
       alignItems="flex-start"
@@ -32,7 +32,7 @@ function ShareLinkPanel({ closeThePanel }: shareLinkPanelProps) {
     >
       <Flex w="100%" h="10%" justifyContent="space-between" alignItems="center">
         <Text fontWeight="bold" fontSize="md">
-          Your meeting`&lsquo;` ready
+          Your meeting is ready
         </Text>
         <Button
           onClick={closeThePanel}
