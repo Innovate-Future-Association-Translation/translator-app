@@ -17,6 +17,7 @@ const baseNavItems: Omit<NavItemProps, 'isActive'>[] = [
   { label: 'Home', imageSrc: '/home.png', to: '/dashboard' },
   { label: 'Scan', imageSrc: '/scan.png', to: '/scan' },
   { label: 'Link', imageSrc: '/link.png', to: '/link-meeting' },
+  { label: 'Room', imageSrc: '/transfer.svg', to: '/real-time-translation' },
   { label: 'Toolbox', imageSrc: '/toolbox.png', to: '/toolbox' },
   { label: 'Profile', imageSrc: '/profile.png', to: '/profile' },
 ];
