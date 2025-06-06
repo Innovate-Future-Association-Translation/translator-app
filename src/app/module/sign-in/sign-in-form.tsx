@@ -7,13 +7,18 @@ import axios from 'axios';
 import { signinSchema, SigninFormData } from '@/app/validation/signin';
 import { InputField } from '@/app/module/common/input-field';
 import { PasswordInput } from '@/app/module/common/password-input';
-import { API_BASE_URL } from '@/lib/api';
+import { API_BASE_URL, getUserProfile } from '@/lib/api';
+import { useRedirectStore } from '@/store/redirectStore';
+import { useRouter } from 'next/navigation';
+import { useUserStore } from '@/store/userStore';
 
-// Sign in form component
 export const SignInForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  // react-hook-form configuration
+  const clearRedirectPath = useRedirectStore((state) => state.clearRedirectPath);
+  const router = useRouter();
+  const setUser = useUserStore((state) => state.setUser);
+
   const {
     register,
     handleSubmit,
@@ -28,7 +33,6 @@ export const SignInForm = () => {
 
   const handleGoogleOauth = () => {
     window.location.href = `${API_BASE_URL}/users/googleAuth`;
-    console.log('Initiating Google Sign-In...');
   };
 
   const onSubmit = async (data: SigninFormData) => {
@@ -42,38 +46,50 @@ export const SignInForm = () => {
 
       if (response.status === 200) {
         const { token, redirectUrl } = response.data;
-        localStorage.setItem('authToken', token);
-        window.location.href = redirectUrl;
+        localStorage.setItem('IFA_AuthToken', token);
+
+        try {
+          const userResponse = await getUserProfile(token);
+          if (userResponse.ok) {
+            const userData = await userResponse.json();
+            setUser(userData);
+          } else {
+            console.error('Failed to fetch user profile after login');
+          }
+        } catch (err) {
+          console.error('Error fetching user profile:', err);
+        }
+
+        let savedRedirectPath = useRedirectStore.getState().redirectPath;
+
+        if (!savedRedirectPath) {
+          try {
+            const storedData = localStorage.getItem('IFA_RedirectPath');
+            if (storedData) {
+              const parsed = JSON.parse(storedData);
+              savedRedirectPath = parsed?.state?.redirectPath || null;
+            }
+          } catch (e) {
+            console.error('[SignInForm] Error parsing localStorage:', e);
+          }
+        }
+
+        if (savedRedirectPath) {
+          router.replace(savedRedirectPath);
+          setTimeout(() => {
+            clearRedirectPath();
+          }, 500);
+        } else {
+          router.replace(redirectUrl || '/dashboard');
+        }
       } else {
         setServerError('Sign-in failed. Please check your credentials.');
       }
     } catch (error) {
-      handleLoginError(error);
+      setServerError('Sign-in failed. Please try again.');
+      console.error('Login error:', error);
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const handleLoginError = (error: unknown) => {
-    if (!axios.isAxiosError(error)) {
-      setServerError(
-        'An unknown error occurred. Please check your network or contact our technical support'
-      );
-      return;
-    }
-
-    const status = error.response?.status;
-    const errorMessage = error.response?.data?.message || '';
-    if (status === 401) {
-      if (errorMessage.includes('email is not verified')) {
-        setServerError('Email is not verified. Please check your inbox to complete verification.');
-      } else {
-        setServerError('Invalid email or password. Please try again.');
-      }
-    } else if (status === 406) {
-      setServerError('Invalid input format. Please check your email and password format.');
-    } else {
-      setServerError('Sign-in failed. Please check your network or contact our technical support.');
     }
   };
 
@@ -101,7 +117,6 @@ export const SignInForm = () => {
         </Box>
       )}
 
-      {/* Sign-in form */}
       <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
         <Stack w="full" gap={4}>
           <InputField
@@ -138,7 +153,6 @@ export const SignInForm = () => {
           </Button>
         </Stack>
       </form>
-      {/* Divider */}
       <Flex w="full" align="center" gap={3}>
         <Box flex={1} h="1px" bg="gray.200" />
         <Text color="gray.500" fontSize="sm">
@@ -146,7 +160,6 @@ export const SignInForm = () => {
         </Text>
         <Box flex={1} h="1px" bg="gray.200" />
       </Flex>
-      {/* Google sign-in button */}
       <Button
         w="full"
         variant="outline"

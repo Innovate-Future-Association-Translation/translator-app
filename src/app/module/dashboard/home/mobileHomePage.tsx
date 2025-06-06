@@ -2,13 +2,13 @@
 import React from 'react';
 import { Box, Text, Button, Flex, Image, useMediaQuery } from '@chakra-ui/react';
 import { createInstantMeeting } from '@/lib/api';
-import { useUser } from '../../../../context/userContext';
+import { useUserStore } from '@/store/userStore';
 import Footer from '../footer';
-import { useMeetingContext } from '@/context/meetingContext';
+import { useMeetingStore } from '@/store/meetingStore';
 import { useRouter } from 'next/navigation';
 export default function MobileHomePage() {
-  const { user } = useUser();
-  const { setMeeting } = useMeetingContext();
+  const user = useUserStore((state) => state.user);
+  const setMeeting = useMeetingStore((state) => state.setMeeting);
   const router = useRouter();
   const [isHighScreen] = useMediaQuery(['(min-height: 800px)'], { ssr: false });
   let proHeight = '140px';
@@ -23,7 +23,6 @@ export default function MobileHomePage() {
     try {
       const data = await createInstantMeeting(user.id);
       if (data.redirectMeetingRoomUrl) {
-        console.log(data);
         setMeeting({
           roomId: data.roomId,
           meetingURL: data.redirectMeetingRoomUrl,

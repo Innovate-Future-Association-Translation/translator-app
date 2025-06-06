@@ -4,17 +4,18 @@ import { Box } from '@chakra-ui/react';
 import DesktopHomePage from '@/app/module/dashboard/home/desktopHomePage';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUser } from '@/context/userContext';
+import { useUserStore } from '@/store/userStore';
 import { getUserProfile } from '@/lib/api';
-import Sidebar from '../module/dashboard/sidebar';
+import Sidebar from '../../module/dashboard/sidebar';
 import dynamic from 'next/dynamic';
-const MobileHomePage = dynamic(() => import('../module/dashboard/home/mobileHomePage'), {
+const MobileHomePage = dynamic(() => import('../../module/dashboard/home/mobileHomePage'), {
   ssr: false,
 });
 
 export default function HomePage() {
   const router = useRouter();
-  const { user, setUser } = useUser();
+  const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
@@ -23,7 +24,6 @@ export default function HomePage() {
     if (tokenFromURL) {
       localStorage.setItem('IFA_AuthToken', tokenFromURL);
       setToken(tokenFromURL);
-      router.replace('/dashboard');
     }
   }, [router]);
 
@@ -49,6 +49,7 @@ export default function HomePage() {
       fetchUserData();
     }
   }, [token, user, setUser]);
+
   return (
     <>
       <Box

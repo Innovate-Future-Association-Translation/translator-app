@@ -3,15 +3,17 @@
 import React from 'react';
 import { Box, Flex, Text, Image } from '@chakra-ui/react';
 import { useRouter, usePathname } from 'next/navigation';
+import LogoutButton from '../common/logout-button';
 
 interface NavItemProps {
   label: string;
   imageSrc: string;
   isActive?: boolean;
   to: string;
+  onClick?: () => void;
 }
 
-const navItems = [
+const baseNavItems: Omit<NavItemProps, 'isActive'>[] = [
   { label: 'Home', imageSrc: '/home.png', to: '/dashboard' },
   { label: 'Scan', imageSrc: '/scan.png', to: '/scan' },
   { label: 'Link', imageSrc: '/link.png', to: '/link-meeting' },
@@ -19,11 +21,9 @@ const navItems = [
   { label: 'Profile', imageSrc: '/profile.png', to: '/profile' },
 ];
 
-const NavItem = ({ label, imageSrc, isActive, to }: NavItemProps) => {
+const NavItem = ({ label, imageSrc, isActive, to, onClick }: NavItemProps) => {
   const router = useRouter();
-  const handleClick = () => {
-    router.push(to);
-  };
+  const effectiveOnClick = onClick ? onClick : () => router.push(to);
 
   return (
     <Flex
@@ -40,7 +40,7 @@ const NavItem = ({ label, imageSrc, isActive, to }: NavItemProps) => {
         bg: 'rgba(255, 255, 255, 0.4)',
         boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.05)',
       }}
-      onClick={handleClick}
+      onClick={effectiveOnClick}
       borderRadius="12%"
       transition="all 0.2s"
     >
@@ -54,6 +54,11 @@ const NavItem = ({ label, imageSrc, isActive, to }: NavItemProps) => {
 
 const Sidebar = () => {
   const currentPath = usePathname();
+
+  const navItemsToRender = baseNavItems.map((item) => ({
+    ...item,
+    isActive: currentPath.startsWith(item.to),
+  }));
 
   return (
     <Box
@@ -78,15 +83,16 @@ const Sidebar = () => {
         </Box>
       </Flex>
       <Flex direction="column" align="center" gap="16px">
-        {navItems.map((item) => (
+        {navItemsToRender.map((item) => (
           <NavItem
             key={item.label}
             label={item.label}
             imageSrc={item.imageSrc}
-            isActive={currentPath.startsWith(item.to)}
+            isActive={item.isActive}
             to={item.to}
           />
         ))}
+        <LogoutButton label="Logout" imageSrc="/logout.svg" />
       </Flex>
     </Box>
   );

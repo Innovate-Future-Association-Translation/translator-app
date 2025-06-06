@@ -1,8 +1,9 @@
 'use client';
 import React from 'react';
-import JoinRoomPage from '../module/link-meeting/link-meeting';
-import Sidebar from '../module/dashboard/sidebar';
+import JoinRoomPage from '../../module/link-meeting/link-meeting';
+import Sidebar from '../../module/dashboard/sidebar';
 import { Flex, Box } from '@chakra-ui/react';
+
 function Page() {
   return (
     <Flex minH="100vh" flexDirection="row">
