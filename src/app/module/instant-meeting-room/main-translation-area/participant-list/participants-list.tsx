@@ -12,12 +12,13 @@ interface userStatus {
 function ParticipantList({ userStatusList }: { userStatusList?: userStatus[] }) {
   return (
     <Box
-      display={{ md: 'flex' }}
+      display="flex"
       flexWrap={{ base: 'wrap', md: 'nowrap' }}
-      flexDir="column"
-      alignItems="center"
-      justifyContent="center"
-      h="100%"
+      flexDir={{ base: 'row', md: 'column' }}
+      alignItems={{ base: 'flex-start', md: 'center' }}
+      justifyContent={{ base: 'flex-start', md: 'center' }}
+      gap={3}
+      overflowY="auto"
     >
       {userStatusList && userStatusList.length > 0 ? (
         userStatusList.map((user, index) => (
@@ -27,8 +28,9 @@ function ParticipantList({ userStatusList }: { userStatusList?: userStatus[] }) 
             justifyContent="center"
             alignItems="center"
             flexDir="column"
-            w={{ base: '100%', md: '80%' }}
-            h={{ base: '60%', md: '15%' }}
+            bgColor="#f9f9f9"
+            w={{ base: `88px`, md: '88px' }}
+            h={{ base: '88px', md: '88px' }}
             p={4}
             borderRadius={{ base: '20px', md: '12px' }}
             position="relative"
@@ -44,8 +46,8 @@ function ParticipantList({ userStatusList }: { userStatusList?: userStatus[] }) 
           >
             {user.isRaiseHand && (
               <Image
-                w={{ base: '10px', md: '20px' }}
-                h={{ base: '10px', md: '20px' }}
+                w={{ base: '15px', md: '20px' }}
+                h={{ base: '15px', md: '20px' }}
                 left="5px"
                 top="5px"
                 src="/user-list/raise-hand-logo.svg"
@@ -54,13 +56,15 @@ function ParticipantList({ userStatusList }: { userStatusList?: userStatus[] }) 
               />
             )}
             <Image
-              w={{ base: '60px', md: '40px' }}
-              h={{ base: '60px', md: '40px' }}
+              w={{ base: '40px', md: '40px' }}
+              h={{ base: '40px', md: '40px' }}
               src="/user-list/default-avatar.svg"
               alt="User Avatar"
             />
             <Box display="flex" flexDir="row" justifyContent="center" alignItems="center">
-              <Text>{user.userName}</Text>
+              <Text fontSize="12px" lineClamp={1}>
+                {user.userName}
+              </Text>
               {user.speaking ? (
                 <Image
                   w={{ base: '14px', md: '16px' }}

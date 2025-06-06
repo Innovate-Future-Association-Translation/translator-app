@@ -8,9 +8,11 @@ import { useUserStore } from '@/store/userStore';
 import * as sdk from 'microsoft-cognitiveservices-speech-sdk';
 import { useMeetingStore } from '@/store/meetingStore';
 import socket from '@/lib/socket';
+import { getMeetingCreator } from '@/lib/api';
 import supportLanguagesList from '@/lib/support-language-list';
 import DeskTopHeading from './heading/desktop-heading';
 import MobileHeading from './heading/mobile-heading';
+import AddUserNavBarInMobile from './add-user-navbar-mobile';
 const SPEECH_KEY = process.env.NEXT_PUBLIC_SPEECH_KEY;
 const SPEECH_REGION = process.env.NEXT_PUBLIC_SPEECH_REGION;
 
@@ -40,9 +42,28 @@ function MeetingRoom() {
   const [isRaiseHand, setIsRaiseHand] = useState<boolean>(false);
   const [myPersonalizedTranslation, setMyPersonalizedTranslation] = useState<string[]>([]);
   const [usersStatusList, setUserStatusList] = useState<userStatus[]>([]);
+  const [openParticipantsPanel, setOpenParticipantsPanel] = useState<boolean>(true);
+  const [openParticipantPanelFullScreen, setOpenParticipantPanelFullScreen] =
+    useState<boolean>(false);
   const user = useUserStore((state) => state.user);
   const meeting = useMeetingStore((state) => state.meeting);
   const localPreferenceLanguage = user?.language;
+  const setMeetingParticipants = useMeetingStore((state) => state.setMeetingParticipants);
+
+  //used to handle IT-44 default open shareLinkPanel and other user close panel
+  useEffect(() => {
+    const fetchCreatorId = async () => {
+      if (meeting?.roomId) {
+        const creatorId = await getMeetingCreator(meeting.roomId);
+        if (creatorId === user?.id) {
+          setShowBarCodeAndLink(true);
+        } else {
+          setShowBarCodeAndLink(false);
+        }
+      }
+    };
+    fetchCreatorId();
+  }, [meeting?.roomId]);
 
   const handleRecognizing = useCallback(
     (text: string) => {
@@ -145,11 +166,15 @@ function MeetingRoom() {
     socket.on('sync-room-status-list', (userStatusListFromServer: userStatus[]) => {
       setUserStatusList(userStatusListFromServer);
     });
+    socket.on('sync-room-participants-number', (participantsNumber: number) => {
+      setMeetingParticipants(participantsNumber);
+    });
 
     return () => {
       socket.off('broadcast-current-room-status');
       socket.off('broadcast-user-join-initial-status');
       socket.off('sync-room-status-list');
+      socket.off('sync-room-participants-number');
     };
   }, [meeting?.roomId, user]);
 
@@ -235,6 +260,14 @@ function MeetingRoom() {
     setShowBarCodeAndLink(true);
   };
 
+  const toggleUserPanel = () => {
+    setOpenParticipantsPanel((prev) => !prev);
+  };
+
+  const toggleFullScreenUserPanel = () => {
+    setOpenParticipantPanelFullScreen((prev) => !prev);
+  };
+
   return (
     <>
       <Box
@@ -267,20 +300,30 @@ function MeetingRoom() {
           <MobileHeading />
         </Box>
         <MainTranslationArea
-          userNameList={recognizedTextUserList}
-          recognizingText={recognizingText}
-          beforeTranslationMessageList={recognizedText}
-          isRecognizing={isRecognizing}
-          afterTranslation={myPersonalizedTranslation}
-          usersStatusList={usersStatusList}
+          speechData={{
+            userNameList: recognizedTextUserList,
+            recognizingText: recognizingText,
+            beforeTranslationMessageList: recognizedText,
+            isRecognizing: isRecognizing,
+            afterTranslation: myPersonalizedTranslation,
+            usersStatusList: usersStatusList,
+          }}
+          openParticipantsPanel={openParticipantsPanel}
+          openParticipantPanelFullScreen={openParticipantPanelFullScreen}
+          toggleParticipantsListFullScreen={toggleFullScreenUserPanel}
         />
         <BottomNavBar
           clickShare={handleOpenShareLinkPanel}
           clickMic={handleOnListening}
           clickRaiseHand={handleOnRaiseHand}
+          toggleUserPanel={toggleUserPanel}
           isListening={isListening}
           isRaiseHand={isRaiseHand}
+          openParticipantsPanel={openParticipantsPanel}
+          toggleFullScreenUserPanel={toggleFullScreenUserPanel}
+          isHidden={openParticipantPanelFullScreen}
         />
+        <AddUserNavBarInMobile isHidden={!openParticipantPanelFullScreen} />
         {showBarCodeAndLink && <ShareLinkPanel closeThePanel={handleCloseShareLinkPanel} />}
       </Box>
     </>
