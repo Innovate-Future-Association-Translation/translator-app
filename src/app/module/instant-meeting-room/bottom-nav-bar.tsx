@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import NavIconButton from '../common/nav-icon-button';
-import QuitMeetingButton from '../common/quit-meeting-button';
 import { useMeetingStore } from '@/store/meetingStore';
 
 interface navBarOnClickActions {
@@ -15,6 +14,7 @@ interface navBarOnClickActions {
   clickQuitMeeting?: () => void;
   toggleUserPanel?: () => void;
   toggleFullScreenUserPanel?: () => void;
+  clickToQuitMeeting?: () => void;
   openParticipantsPanel: boolean;
   isHidden: boolean;
 }
@@ -26,6 +26,7 @@ function BottomNavBar({
   clickShare,
   toggleUserPanel,
   toggleFullScreenUserPanel,
+  clickToQuitMeeting,
   isListening,
   isRaiseHand,
   openParticipantsPanel,
@@ -83,12 +84,17 @@ function BottomNavBar({
           onClick={clickRaiseHand}
         />
         <NavIconButton src="/navbar-icon/share.svg" bg="#ffffff" onClick={clickShare} />
-        <QuitMeetingButton imageSrc="/quit-meeting.svg" />
+        <NavIconButton
+          src="/quit-meeting.svg"
+          bg="#dc2626"
+          filter="brightness(0) invert(1)"
+          onClick={clickToQuitMeeting}
+        />
       </Flex>
       <Box
         border="solid 1px #ebebeb"
-        w={{ base: '72px', md: '72px' }}
-        h={{ base: '44px', md: '44px' }}
+        w={{ base: '70px', md: '72px' }}
+        h={{ base: '38px', md: '44px' }}
         borderRadius="22px"
         display="flex"
         alignItems="center"

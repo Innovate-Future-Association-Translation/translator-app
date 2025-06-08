@@ -56,6 +56,7 @@ function MainTranslationArea({
   }, [beforeTranslationMessageList]);
 
   useEffect(() => {
+    console.log('after translation:', afterTranslation);
     if (afterTranslation.length > 0) {
       const newTranslatedMessages = [...afterTranslation];
 

@@ -19,6 +19,7 @@ function ParticipantList({ userStatusList }: { userStatusList?: userStatus[] }) 
       justifyContent={{ base: 'flex-start', md: 'center' }}
       gap={3}
       overflowY="auto"
+      px="16px"
     >
       {userStatusList && userStatusList.length > 0 ? (
         userStatusList.map((user, index) => (
