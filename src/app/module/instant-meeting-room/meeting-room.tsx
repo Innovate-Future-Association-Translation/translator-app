@@ -13,6 +13,9 @@ import supportLanguagesList from '@/lib/support-language-list';
 import DeskTopHeading from './heading/desktop-heading';
 import MobileHeading from './heading/mobile-heading';
 import AddUserNavBarInMobile from './add-user-navbar-mobile';
+import TranslationLanguageSelector from './language-selector';
+import { useRouter } from 'next/navigation';
+
 const SPEECH_KEY = process.env.NEXT_PUBLIC_SPEECH_KEY;
 const SPEECH_REGION = process.env.NEXT_PUBLIC_SPEECH_REGION;
 
@@ -32,6 +35,7 @@ interface userStatus {
 }
 
 function MeetingRoom() {
+  const router = useRouter();
   const [showBarCodeAndLink, setShowBarCodeAndLink] = useState(true);
   const [isListening, setIsListening] = useState(false);
   const [recognizedText, setRecognizedText] = useState<string[]>([]);
@@ -45,9 +49,13 @@ function MeetingRoom() {
   const [openParticipantsPanel, setOpenParticipantsPanel] = useState<boolean>(true);
   const [openParticipantPanelFullScreen, setOpenParticipantPanelFullScreen] =
     useState<boolean>(false);
+  const [openLanguageSelector, setOpenLanguageSelector] = useState<boolean>(false);
+  //by default the user selected language is null and use his default preference to do translation
+  const [reselectLanguage, setReselectLanguage] = useState<string | null>(null);
+
   const user = useUserStore((state) => state.user);
   const meeting = useMeetingStore((state) => state.meeting);
-  const localPreferenceLanguage = user?.language;
+  const effectiveLanguage = reselectLanguage ?? user?.language;
   const setMeetingParticipants = useMeetingStore((state) => state.setMeetingParticipants);
 
   //used to handle IT-44 default open shareLinkPanel and other user close panel
@@ -188,10 +196,10 @@ function MeetingRoom() {
       setRecognizedText((prev) => [...prev, text]);
       setRecognizedTextUserList((prev) => [...prev, emittingUser.name]);
 
-      if (localPreferenceLanguage) {
+      if (effectiveLanguage) {
         socket.emit('request-translate-for-me', {
           text,
-          myPreferLanguage: localPreferenceLanguage,
+          myPreferLanguage: effectiveLanguage,
         });
       }
     };
@@ -221,7 +229,7 @@ function MeetingRoom() {
       socket.off('broadcast-user-status', handleUserStatusBroadcast);
       socket.off('personal-translation-result', handleTranslationForMe);
     };
-  }, [localPreferenceLanguage]);
+  }, [effectiveLanguage]);
 
   const handleOnRaiseHand = () => {
     if (!user) return;
@@ -268,6 +276,16 @@ function MeetingRoom() {
     setOpenParticipantPanelFullScreen((prev) => !prev);
   };
 
+  const toggleLanguageSelector = () => {
+    setOpenLanguageSelector((prev) => !prev);
+  };
+
+  const handleOnRetranslation = (newTranslation: string[]) => {
+    setMyPersonalizedTranslation(newTranslation);
+  };
+  const handleQuitMeeting = () => {
+    router.push('/dashboard/');
+  };
   return (
     <>
       <Box
@@ -303,9 +321,9 @@ function MeetingRoom() {
           speechData={{
             userNameList: recognizedTextUserList,
             recognizingText: recognizingText,
-            beforeTranslationMessageList: recognizedText,
+            beforeTranslationMessageList: recognizedText.filter((t) => t.trim() !== ''), //handle the empty string in ui
             isRecognizing: isRecognizing,
-            afterTranslation: myPersonalizedTranslation,
+            afterTranslation: myPersonalizedTranslation.filter((t) => t.trim() !== ''), //handle the empty string in ui
             usersStatusList: usersStatusList,
           }}
           openParticipantsPanel={openParticipantsPanel}
@@ -315,8 +333,10 @@ function MeetingRoom() {
         <BottomNavBar
           clickShare={handleOpenShareLinkPanel}
           clickMic={handleOnListening}
+          clickAItranslation={toggleLanguageSelector} //for open language selector panel
           clickRaiseHand={handleOnRaiseHand}
           toggleUserPanel={toggleUserPanel}
+          clickToQuitMeeting={handleQuitMeeting}
           isListening={isListening}
           isRaiseHand={isRaiseHand}
           openParticipantsPanel={openParticipantsPanel}
@@ -326,6 +346,12 @@ function MeetingRoom() {
         <AddUserNavBarInMobile isHidden={!openParticipantPanelFullScreen} />
         {showBarCodeAndLink && <ShareLinkPanel closeThePanel={handleCloseShareLinkPanel} />}
       </Box>
+      <TranslationLanguageSelector
+        isOpen={openLanguageSelector}
+        clickToCloseLanguageSelector={toggleLanguageSelector}
+        resetLanguageTranslationInThisMeeting={setReselectLanguage}
+        setNewPersonalTranslation={handleOnRetranslation}
+      />
     </>
   );
 }
