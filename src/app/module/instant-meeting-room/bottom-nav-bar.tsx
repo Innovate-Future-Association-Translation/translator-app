@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import NavIconButton from '../common/nav-icon-button';
 import QuitMeetingButton from '../common/quit-meeting-button';
+import { useMeetingStore } from '@/store/meetingStore';
 
 interface navBarOnClickActions {
   clickMic?: () => void;
@@ -12,17 +13,25 @@ interface navBarOnClickActions {
   isListening: boolean;
   isRaiseHand: boolean;
   clickQuitMeeting?: () => void;
+  toggleUserPanel?: () => void;
+  toggleFullScreenUserPanel?: () => void;
+  openParticipantsPanel: boolean;
+  isHidden: boolean;
 }
 
 function BottomNavBar({
   clickMic,
-  clickUser,
   clickAItranslation,
   clickRaiseHand,
   clickShare,
+  toggleUserPanel,
+  toggleFullScreenUserPanel,
   isListening,
   isRaiseHand,
+  openParticipantsPanel,
+  isHidden,
 }: navBarOnClickActions) {
+  const meetingParticipants = useMeetingStore.getState().meetingParticipants;
   return (
     <Flex
       bgColor="#ffffff"
@@ -37,6 +46,9 @@ function BottomNavBar({
       maxW={{ base: '92vw', md: '95vw' }}
       minW={{ base: '360px', md: '480px' }}
       mx={{ base: 'auto', md: 'initial' }}
+      display={{ base: isHidden ? 'none' : 'flex', md: 'flex' }}
+      position="fixed"
+      bottom="3vh"
     >
       <Flex
         gap={{ base: '6px', md: 'max(8px, min(1.5vw, 16px))' }}
@@ -51,7 +63,15 @@ function BottomNavBar({
           onClick={clickMic}
         />
 
-        <NavIconButton src="/navbar-icon/userWithRound.svg" bg="#ffffff" onClick={clickUser} />
+        <NavIconButton
+          src={
+            openParticipantsPanel
+              ? '/navbar-icon/userWithRound.svg'
+              : '/navbar-icon/no-user-panel.svg'
+          }
+          bg="#ffffff"
+          onClick={toggleUserPanel}
+        />
         <NavIconButton
           src="/navbar-icon/ai-translation.svg"
           bg="#ffffff"
@@ -65,28 +85,26 @@ function BottomNavBar({
         <NavIconButton src="/navbar-icon/share.svg" bg="#ffffff" onClick={clickShare} />
         <QuitMeetingButton imageSrc="/quit-meeting.svg" />
       </Flex>
-
       <Box
         border="solid 1px #ebebeb"
-        w={{ base: '72px', md: 'max(60px, min(5vw, 80px))' }}
-        h={{ base: '44px', md: 'max(44px, min(3vw, 60px))' }}
+        w={{ base: '72px', md: '72px' }}
+        h={{ base: '44px', md: '44px' }}
         borderRadius="22px"
         display="flex"
         alignItems="center"
         justifyContent="center"
-        p="0 8px"
-        flexShrink={0}
-        ml={{ base: '8px', md: '16px' }}
+        gap="0.4vw"
+        p="0 0.8vw"
+        as="button"
+        onClick={toggleFullScreenUserPanel}
       >
         <Image
-          w={{ base: '24px', md: 'max(20px, min(1.6vw, 28px))' }}
-          h={{ base: '24px', md: 'max(20px, min(1.6vw, 28px))' }}
+          w={{ base: '24px', md: '24px' }}
+          h={{ base: '24px', md: '24px' }}
           src="/navbar-icon/user.svg"
           alt="user-logo-in-bottom-nav-bar"
         />
-        <Text fontSize={{ base: '14px', md: 'max(12px, min(1vw, 16px))' }} fontWeight="500">
-          1
-        </Text>
+        <Text fontSize={{ base: '14px', md: '17px' }}>{meetingParticipants}</Text>
       </Box>
     </Flex>
   );
