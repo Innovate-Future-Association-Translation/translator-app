@@ -47,3 +47,16 @@ export async function getMeetingCreator(roomId: string) {
   const data = await response.json();
   return data.creator.id;
 }
+
+export async function reTranslateMeetingRoomRecord(roomId: string, to: string) {
+  const response = await fetch(`${API_BASE_URL}/meetings/history-speech-retranslation`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ roomId, to }),
+  });
+
+  const data = await response.json();
+  return data;
+}
