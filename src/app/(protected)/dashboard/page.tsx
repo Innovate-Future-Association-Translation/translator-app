@@ -8,6 +8,8 @@ import { useUserStore } from '@/store/userStore';
 import { getUserProfile } from '@/lib/api';
 import Sidebar from '../../module/dashboard/sidebar';
 import dynamic from 'next/dynamic';
+import LoadingUser from '../../module/dashboard/loading-user';
+import { useIsomorphicMediaQuery } from '@/hooks/useIsomorphicMediaQuery';
 const MobileHomePage = dynamic(() => import('../../module/dashboard/home/mobileHomePage'), {
   ssr: false,
 });
@@ -50,23 +52,35 @@ export default function HomePage() {
     }
   }, [token, user, setUser]);
 
+  const isDesktop = useIsomorphicMediaQuery('(min-width: 48em)');
+  if (isDesktop === null) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <LoadingUser />
+      </Box>
+    );
+  }
+
   return (
     <>
-      <Box
-        display={{ base: 'none', md: 'flex' }}
-        gap="60px"
-        flexDir="row"
-        bgImage={{ base: 'none', md: "url('/dashboard/dashboard-background-img-small.png')" }}
-        bgSize="cover"
-      >
-        <Sidebar />
-        <Box mt="20px" ml="30px">
-          <DesktopHomePage />
+      {isDesktop ? (
+        <Box
+          display="flex"
+          gap="60px"
+          flexDir="row"
+          bgImage="url('/dashboard/dashboard-background-img-small.png')"
+          bgSize="cover"
+        >
+          <Sidebar />
+          <Box mt="20px" ml="30px">
+            <DesktopHomePage />
+          </Box>
         </Box>
-      </Box>
-      <Box display={{ base: 'block', md: 'none' }}>
-        <MobileHomePage />
-      </Box>
+      ) : (
+        <Box>
+          <MobileHomePage />
+        </Box>
+      )}
     </>
   );
 }

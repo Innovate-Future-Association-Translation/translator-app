@@ -63,7 +63,15 @@ export default function DesktopHomePage() {
               <FeatureCard
                 key={index}
                 {...feature}
-                onClickApi={index === 0 ? handleCreateMeeting : undefined}
+                onClickApi={
+                  index === 0
+                    ? handleCreateMeeting
+                    : index === 1
+                      ? () => router.push('/scan')
+                      : index === 2
+                        ? () => router.push('/real-time-translation')
+                        : undefined
+                }
               />
             ))}
           </Flex>
@@ -73,12 +81,15 @@ export default function DesktopHomePage() {
             <Flex justify={'space-between'}>
               {/* trigger create meeting api in middle screen */}
               <FeatureCard {...features[0]} onClickApi={handleCreateMeeting} />
-              <FeatureCard {...features[1]} />
+              <FeatureCard {...features[1]} onClickApi={() => router.push('/scan')} />
             </Flex>
           </Box>
           <Box>
             <Flex justify={'space-between'}>
-              <FeatureCard {...features[2]} />
+              <FeatureCard
+                {...features[2]}
+                onClickApi={() => router.push('/real-time-translation')}
+              />
               <FeatureCard {...features[3]} />
             </Flex>
           </Box>

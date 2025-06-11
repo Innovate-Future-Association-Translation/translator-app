@@ -70,7 +70,15 @@ export default function MobileHomePage() {
             </Flex>
           </Flex>
           <Flex mt="12px" justify="space-between">
-            <Box w="48%" h="212px" bgColor={'#dad9fb'} borderRadius={'20px'} position={'relative'}>
+            <Box
+              w="48%"
+              h="212px"
+              bgColor={'#dad9fb'}
+              borderRadius={'20px'}
+              position={'relative'}
+              as="button"
+              onClick={() => router.push('/scan')}
+            >
               <Image
                 src="/card-bg2.png"
                 alt="background"
@@ -115,6 +123,8 @@ export default function MobileHomePage() {
                 bgRepeat={'no-repeat'}
                 p="20px"
                 position={'relative'}
+                as="button"
+                onClick={() => router.push('/real-time-translation')}
               >
                 <Text fontSize={'16px'} color={'#25292c'} fontWeight={'bold'}>
                   Realtime
