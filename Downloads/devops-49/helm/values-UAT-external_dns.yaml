@@ -1,0 +1,12 @@
+serviceAccount:
+  create: true
+  name: external-dns
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::893774231297:role/DispatchAI/UAT/eks/DispatchAI-UAT-EKS-ExternalDNSRole
+
+registry: noop
+
+policy: sync
+
+managedRecordTypes:
+  - A

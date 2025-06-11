@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dispatchai-frontend.fullname" . }}-deployment
+  labels:
+    app: {{ include "dispatchai-frontend.fullname" . }}
+    env: {{ .Values.environment }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "dispatchai-frontend.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "dispatchai-frontend.fullname" . }}
+        env: {{ .Values.environment }}
+    spec:
+      containers:
+        - name: {{ include "dispatchai-frontend.fullname" . }}-pod
+          image: {{ include "dispatchai-frontend.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.containerPort }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "dispatchai-frontend.fullname" . }}-configmap

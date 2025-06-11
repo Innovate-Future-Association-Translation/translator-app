@@ -1,0 +1,13 @@
+environment: uat
+
+replicas: 2
+
+image:
+  repository: "893774231297.dkr.ecr.ap-southeast-2.amazonaws.com/dispatchai-frontend"
+  tag: ""
+
+ingress:
+  host: "uat.getdispatch.ai"
+  annotations:
+    groupName: "dispatchai-uat"
+    certificateArn: "arn:aws:acm:ap-southeast-2:893774231297:certificate/419da1d0-dd47-4d12-b22b-c91826e777e1"

@@ -1,0 +1,7 @@
+clusterName: DispatchAI-UAT-EKS-Cluster
+
+serviceAccount:
+  create: true
+  name: aws-load-balancer-controller
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::893774231297:role/DispatchAI/UAT/eks/DispatchAI-UAT-EKS-AmazonEKSLoadBalancerControllerRole

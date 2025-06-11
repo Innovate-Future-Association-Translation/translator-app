@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "dispatchai-frontend.fullname" . }}-ingress
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: {{ include "dispatchai-frontend.fullname" . }}-ingress
+    alb.ingress.kubernetes.io/group.name: {{ .Values.ingress.annotations.groupName }}
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.annotations.certificateArn }}
+spec:
+  ingressClassName: alb
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "dispatchai-frontend.fullname" . }}-service
+                port:
+                  number: {{ .Values.service.port }}

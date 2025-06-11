@@ -1,0 +1,20 @@
+environment: ""
+
+replicas: 2
+
+image:
+  repository: ""
+  tag: ""
+  pullPolicy: IfNotPresent
+
+containerPort: 3000
+
+service:
+  port: 3000
+  targetPort: 3000
+
+ingress:
+  host: ""
+  annotations:
+    groupName: ""
+    certificateArn: ""
